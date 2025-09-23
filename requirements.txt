@@ -1,0 +1,32 @@
+# FastAPI core
+fastapi==0.110.0
+uvicorn[standard]==0.27.1
+
+# Database & ORM
+sqlalchemy==2.0.25
+alembic==1.13.1   # for migrations (optional, but useful)
+psycopg2-binary==2.9.9  # if using PostgreSQL
+# or, if using SQLite only, you can skip psycopg2
+
+# Auth & Security
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+bcrypt==4.1.2
+
+# Pydantic
+pydantic==1.10.14
+pydantic-settings==2.1.0
+
+# Data processing
+pandas==2.2.0
+openpyxl==3.1.2  # for Excel export
+
+# File handling
+python-multipart==0.0.6  # if you use file uploads
+
+# CORS
+starlette==0.36.3
+
+# Testing (optional but recommended)
+httpx==0.26.0
+pytest==8.0.0
