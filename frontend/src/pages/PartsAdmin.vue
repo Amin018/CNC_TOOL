@@ -1,9 +1,9 @@
 <template>
   <div class="p-6">
-    <h1 class="text-2xl font-bold mb-4">Manage Parts</h1>
+    <h1 class="text-2xl font-bold mb-4">Parts</h1>
 
     <!-- Add Part Form -->
-    <form @submit.prevent="addPart" class="flex gap-4 mb-6">
+    <form v-if="user.role === 'admin'" @submit.prevent="addPart" class="flex gap-4 mb-6">
       <input v-model="newPart.part_no" placeholder="Part No" class="border p-2 rounded w-1/3" />
       <input v-model="newPart.description" placeholder="Description" class="border p-2 rounded w-1/2" />
       <input v-model="newPart.package" placeholder="Package" class="border p-2 rounded w-1/4" />

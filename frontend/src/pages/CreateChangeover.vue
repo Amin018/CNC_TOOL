@@ -115,7 +115,7 @@ const form = ref({
 
 async function submitChangeover() {
   try {
-    await api.post("/changeovers", form.value)
+    await api.post("/changeovers/", form.value)
     alert("Changeover request created successfully!")
     router.push("/changeovers") // redirect back to list
   } catch (err) {
