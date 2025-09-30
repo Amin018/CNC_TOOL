@@ -170,6 +170,26 @@ class ToolRequestResponse(ToolRequestBase):
 
 class ToolRequestUpdate(BaseModel):
     remark: Optional[str] = None
+
+
+# ======================================================
+# MACHINE SCHEMAS
+# ======================================================
+
+class MachineBase(BaseModel):
+    production_line: str
+    machine_no: str
+    status: Optional[str] = "Active"
+
+class MachineCreate(MachineBase):
+    pass
+
+class MachineResponse(MachineBase):
+    id: int
+
+    class Config:
+        from_attributes = True
+
 # ======================================================
 # GENERIC RESPONSE / MESSAGE (optional)
 # ======================================================

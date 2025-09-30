@@ -9,7 +9,7 @@ import PartsAdmin from "../pages/PartsAdmin.vue";
 import ToolRequestList from "../pages/ToolRequestList.vue";
 import CreateToolRequest from "../pages/CreateToolRequest.vue";
 import ToolRequestDetail from "../pages/ToolRequestDetail.vue";
-
+import MachineList from "@/pages/MachineList.vue";
 
 
 const routes = [
@@ -28,6 +28,7 @@ const routes = [
   { path: "/tools", name: "ToolRequestList", component: ToolRequestList },
   { path: "/tools/new", name: "CreateToolRequest", component: CreateToolRequest },
   { path: "/tools/:id", name: "ToolRequestDetail", component: () => import("../pages/ToolRequestDetail.vue")},
+  { path: "/machines", name: "MachineList", component: MachineList },
 
     ]
   }

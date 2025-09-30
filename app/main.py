@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from app.database import engine
 from app import models, database
-from app.routers import admin, users, auth, tools, changeover, parts
+from app.routers import admin, users, auth, tools, changeover, parts, machine
 from fastapi import Depends
 from app.routers.auth import get_current_user
 from app import schemas
@@ -11,7 +11,7 @@ from app.utils import hash_password
 import os
 from dotenv import load_dotenv
 
-load_dotenv()
+load_dotenv(dotenv_path=".env")
 
 app = FastAPI(title="CNC Tool Management API")
 
@@ -53,6 +53,7 @@ app.include_router(tools.router)
 app.include_router(auth.router)
 app.include_router(changeover.router)
 app.include_router(parts.router)
+app.include_router(machine.router)
 
 @app.get("/")
 def root():

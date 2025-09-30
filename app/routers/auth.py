@@ -13,7 +13,7 @@ from app.utils import hash_password, verify_password  # <-- use from utils
 import os
 from dotenv import load_dotenv
 
-load_dotenv()
+load_dotenv(dotenv_path=".env")
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
 

@@ -85,6 +85,7 @@ const navItems = [
   { name: "Parts", path: "/admin/parts", roles: ["admin", "user", "tool", "leader"] },
   { name: "Manage Users", path: "/admin/users", roles: ["admin"] },
   { name: "Tool Requests", path: "/tools", roles: ["admin", "user", "tool", "leader"] },
+  { name: "Machines", path: "/machines", roles: ["admin", "user", "leader"] },
   
 ]
 

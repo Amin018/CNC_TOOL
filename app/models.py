@@ -30,9 +30,9 @@ class Machine(Base):
     __tablename__ = "machines"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
-    machine_no: Mapped[str] = mapped_column(String, unique=True, nullable=False)
-    production_line: Mapped[str | None] = mapped_column(String, nullable=True)
-    description: Mapped[str | None] = mapped_column(Text, nullable=True)
+    production_line: Mapped[str] = mapped_column(String(100), nullable=False)
+    machine_no: Mapped[str] = mapped_column(String(100), nullable=False, unique=True)
+    status: Mapped[str] = mapped_column(String(50), default="Active")  # optional
 
 
 # ---------- PARTS  ----------

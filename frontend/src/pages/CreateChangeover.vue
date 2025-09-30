@@ -4,26 +4,21 @@
       <h1 class="text-2xl font-bold mb-4">Create New Changeover</h1>
 
       <form @submit.prevent="submitChangeover" class="space-y-4">
+
         <!-- Production Line -->
         <div>
           <label class="block font-semibold mb-1">Production Line</label>
-          <input
-            v-model="form.production_line"
-            type="text"
-            class="w-full border p-2 rounded"
-            required
-          />
+          <select v-model="selectedLine" @change="filterMachines" class="w-full border p-2 rounded" required>
+            <option v-for="line in productionLines" :key="line" >{{ line }}</option>
+          </select>
         </div>
 
         <!-- Machine Number -->
         <div>
           <label class="block font-semibold mb-1">Machine No</label>
-          <input
-            v-model="form.machine_no"
-            type="text"
-            class="w-full border p-2 rounded"
-            required
-          />
+          <select v-model="form.machine_no" class="w-full border p-2 rounded" required>
+            <option v-for="m in filteredMachines" :key="m.id" >{{ m.machine_no }}</option>
+          </select>
         </div>
 
         <!-- Current Part No with autocomplete -->
@@ -98,8 +93,8 @@
 </template>
 
 <script setup>
-import { ref } from "vue"
 import { useRouter } from "vue-router"
+import { ref, onMounted } from "vue"
 import api from "../api/axios"
 
 const router = useRouter()
@@ -167,5 +162,22 @@ function selectNewPart(partNo) {
   nextPart.value = partNo
   nextsuggestions.value = [] // hide dropdown after selection
 }
+
+const machines = ref([])
+const productionLines = ref([])
+const filteredMachines = ref([])
+const selectedLine = ref("")
+
+async function fetchMachines() {
+  const res = await api.get("/machines/")
+  machines.value = res.data
+  productionLines.value = [...new Set(machines.value.map(m => m.production_line))]
+}
+
+function filterMachines() {
+  filteredMachines.value = machines.value.filter(m => m.production_line === selectedLine.value)
+}
+
+onMounted(fetchMachines)
 
 </script>
