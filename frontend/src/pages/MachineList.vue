@@ -3,11 +3,13 @@
     <h1 class="text-2xl font-bold mb-4">Machine Management</h1>
 
     <!-- Add Machine -->
-    <form @submit.prevent="addMachine" v-if="user.role === 'admin'" class="flex gap-2 mb-4">
+     <div v-if="user.role === 'admin'" class="mb-4">
+      <form v-if="user.role === 'admin'" @submit.prevent="addMachine" class="flex gap-2 mb-4">
       <input v-model="newMachine.production_line" placeholder="Production Line" class="border p-2 rounded w-1/3" required />
       <input v-model="newMachine.machine_no" placeholder="Machine No" class="border p-2 rounded w-1/3" required />
       <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Add</button>
-    </form>
+      </form>
+    </div>
 
     <!-- List Machines -->
     <table class="table-auto border w-full">
@@ -17,7 +19,7 @@
           <th class="px-4 py-2 border">Production Line</th>
           <th class="px-4 py-2 border">Machine No</th>
           <th class="px-4 py-2 border">Status</th>
-          <th class="px-4 py-2 border">Actions</th>
+          <th v-if="user.role === 'admin'" class="px-4 py-2 border">Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -30,11 +32,11 @@
                 {{ machine.status }}
             </span>
         </td>
-        <td class="px-4 py-2 border flex gap-2">
+        <td v-if="user.role === 'admin'" class="px-4 py-2 border flex gap-2">
         <button @click="toggleStatus(machine)" class="bg-yellow-500 text-white px-2 py-1 rounded">
             {{ machine.status === 'Active' ? 'Set Offline' : 'Set Active' }}
         </button>
-        <button @click="deleteMachine(machine.id)" class="bg-red-500 text-white px-2 py-1 rounded">Delete</button>
+        <button  @click="deleteMachine(machine.id)" class="bg-red-500 text-white px-2 py-1 rounded">Delete</button>
         </td>
         </tr>
       </tbody>
@@ -49,6 +51,16 @@ import api from "../api/axios"
 const machines = ref([])
 const newMachine = ref({ production_line: "", machine_no: "" })
 const user = ref({ username: "", role: "" })
+
+async function fetchUser() {
+  try {
+    const res = await api.get('/auth/me')
+    user.value = res.data
+    //console.log("STEP1 -> Fetched user:", user.value)
+  } catch (err) {
+    console.error("Error fetching user:", err)
+  }
+}
 
 async function fetchMachines() {
   const res = await api.get("/machines")
