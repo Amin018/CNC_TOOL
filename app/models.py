@@ -108,6 +108,7 @@ class ToolRequest(Base):
     __tablename__ = "tool_requests"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    production_line: Mapped[str] = mapped_column(String(100))
     machine_no: Mapped[str] = mapped_column(String(100))
     part_no: Mapped[str] = mapped_column(String(100))
     tool_name: Mapped[str] = mapped_column(String(100))

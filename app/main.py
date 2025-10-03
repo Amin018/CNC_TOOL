@@ -11,7 +11,7 @@ from app.utils import hash_password
 import os
 from dotenv import load_dotenv
 
-load_dotenv(dotenv_path=".env")
+load_dotenv()
 
 app = FastAPI(title="CNC Tool Management API")
 

@@ -139,6 +139,7 @@ class ToolStatus(str, Enum):
     COMPLETED = "Completed"
 
 class ToolRequestBase(BaseModel):
+    production_line: str
     machine_no: str
     part_no: str
     tool_name: str
