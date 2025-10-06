@@ -63,7 +63,7 @@ async function fetchUser() {
 }
 
 async function fetchMachines() {
-  const res = await api.get("/machines")
+  const res = await api.get("/machines/")
   machines.value = res.data
 }
 

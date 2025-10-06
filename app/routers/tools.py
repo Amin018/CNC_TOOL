@@ -45,6 +45,7 @@ def create_tool_request(
     current_user: models.User = Depends(require_user)
 ):
     new_request = models.ToolRequest(
+        production_line=request.production_line,
         machine_no=request.machine_no,
         tool_name=request.tool_name,
         part_no=request.part_no,

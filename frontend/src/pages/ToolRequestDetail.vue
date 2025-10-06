@@ -31,6 +31,16 @@
         >
           <h2 class="text-xl font-bold mb-4">Prepare/Replace Tool</h2>
           <form @submit.prevent="submitToolReplace" class="space-y-4">
+
+            <label class="flex items-center">
+              <input type="checkbox" v-model="tool_checklist.UnusableTool" class="mr-2" />
+              Receive Unusable Cutting Tool
+            </label>
+            <label class="flex items-center">
+              <input type="checkbox" v-model="tool_checklist.NewTool" class="mr-2" />
+              Replace Cutting Tool
+            </label>
+
             <textarea
               v-model="remark"
               placeholder="Enter remarks about preparation..."
@@ -38,7 +48,9 @@
             ></textarea>
             <button
               type="submit"
-              class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+              :disabled="!allCheckedforTool"
+              class="px-4 py-2 rounded text-white"
+              :class="allCheckedforTool ? 'bg-blue-500 hover:bg-blue-600' : 'bg-gray-400 cursor-not-allowed'"
             >
               Submit Preparation
             </button>
@@ -69,7 +81,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from "vue"
+import { ref, computed, onMounted, onUnmounted } from "vue"
 import { useRoute, useRouter } from "vue-router"
 import api from "../api/axios"
 
@@ -80,6 +92,16 @@ const tool = ref({})
 const user = ref({ username: "", role: "" })
 const isLoading = ref(true)
 const remark = ref("")
+
+const tool_checklist = ref({
+  UnusableTool: false,
+  NewTool: false
+})
+
+// Enable submit only if all checked
+const allCheckedforTool = computed(() => {
+  return Object.values(tool_checklist.value).every(Boolean)
+})
 
 const formatDate = (dateStr) => {
   if (!dateStr) return "-"

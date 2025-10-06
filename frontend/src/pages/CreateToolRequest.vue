@@ -93,6 +93,7 @@ const router = useRouter()
 
 // Form state
 const form = ref({
+  production_line: "",
   machine_no: "",
   part_no: "",
   tool_name: "",
@@ -124,6 +125,10 @@ function selectPart(partNo) {
 
 async function submitToolRequest() {
   try {
+
+    // Set part number from selected autocomplete
+    form.value.part_no = partInput.value
+
     await api.post("/tools/", form.value)
     alert("Tool request created successfully!")
     router.push("/tools") // redirect back to list

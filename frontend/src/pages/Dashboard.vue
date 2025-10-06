@@ -108,7 +108,7 @@ async function fetchDashboardData() {
         ]
       },
       options: {
-        indexAxis: 'y', 
+        indexAxis: 'x', 
         responsive: true,
         plugins: { legend: { display: false } }
       }
@@ -123,12 +123,17 @@ let intervalId;
 onMounted(() => {
   fetchDashboardData();
   intervalId = setInterval(() => {
-    chartInstance.value && chartInstance.value.destroy();
-    fetchDashboardData();
+      if (chartInstance.value) {
+          chartInstance.value.destroy();
+          }
+      fetchDashboardData();
   }, 30000); // Refresh every 30 seconds
 });
 
 onUnmounted(() => {
   if (intervalId) clearInterval(intervalId);
+  if (chartInstance.value) {
+    chartInstance.value.destroy()
+  }
 });
 </script>

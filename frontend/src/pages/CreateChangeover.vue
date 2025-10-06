@@ -110,6 +110,11 @@ const form = ref({
 
 async function submitChangeover() {
   try {
+
+    // Set part numbers from autocomplete selections
+    form.value.current_part_no = currentPart.value
+    form.value.next_part_no = nextPart.value
+
     await api.post("/changeovers/", form.value)
     alert("Changeover request created successfully!")
     router.push("/changeovers") // redirect back to list

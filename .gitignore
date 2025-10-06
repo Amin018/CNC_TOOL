@@ -1,6 +1,7 @@
 # Python
 venv/
 __pycache__/
+app/routers/__pycache__
 *.pyc
 
 # Node
@@ -12,3 +13,9 @@ dist/
 *.env
 app/.env
 *.sqlite3
+
+# Database
+*.db
+
+alembic/
+alembic.ini
