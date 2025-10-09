@@ -8,6 +8,11 @@
         'fixed inset-y-0 left-0 w-64 md:translate-x-0 md:static'
       ]"
     >
+      <img
+        src="@/assets/logo.png"
+        alt="Company Logo"
+        class="hidden md:block mx-auto bg-auto mb-3 "
+      />
       <h1 class="text-lg font-bold hidden md:block">CNC System</h1>
       <nav class="mt-6 space-y-2">
         <router-link
@@ -38,7 +43,7 @@
           </svg>
         </button>
 
-        <h1 class="text-sm sm:text-lg font-bold text-blue-500">SMEA-MachineShop</h1>
+        <h1 class="text-sm sm:text-lg font-bold text-gray-700">SMEA-MachineShop</h1>
 
         <div class="flex items-center gap-2 sm:gap-4">
           <span class="text-xs sm:text-sm text-gray-600">{{ user.username }} ({{ user.role }})</span>
