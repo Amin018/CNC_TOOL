@@ -14,38 +14,36 @@
     </div>
 
 
-    <!-- Status Filter -->
-    <div class="mb-4">
-      <label class="mr-2 font-medium">Filter by Status:</label>
-      <select
-        v-model="statusFilter"
-        class="border border-gray-300 rounded p-2"
-      >
-        <option value="">All</option>
-        <option value="Pending">Pending</option>
-        <option value="In_Progress">In Progress</option>
-        <option value="Returned">Returned</option>
-        <option value="Completed">Completed</option>
-      </select>
+   <!-- Filters Container -->
+    <div class="grid grid-cols-2 gap-4 mb-4 max-w-md">
+      <!-- Status Filter -->
+      <div class="flex items-center">
+        <label class="w-32 font-medium">Filter by Status:</label>
+        <select v-model="statusFilter" class="flex-1 border border-gray-300 rounded p-2">
+          <option value="">All</option>
+          <option value="Pending">Pending</option>
+          <option value="In_Progress">In Progress</option>
+          <option value="Returned">Returned</option>
+          <option value="Completed">Completed</option>
+        </select>
+      </div>
+
+      <!-- Date Filter -->
+      <div class="flex items-center">
+        <label class="w-32 font-medium">Filter by Date:</label>
+        <select v-model="dateFilter" class="flex-1 border border-gray-300 rounded p-2">
+          <option value="all">All</option>
+          <option value="daily">Today</option>
+          <option value="weekly">This Week</option>
+          <option value="monthly">This Month</option>
+        </select>
+      </div>
     </div>
 
-    <!-- Date Filter -->
-    <div class="mb-4">
-      <label class="mr-2 font-medium">Filter by Date:</label>
-      <select
-        v-model="dateFilter"
-        class="border border-gray-300 rounded p-2"
-      >
-        <option value="all">All</option>
-        <option value="daily">Today</option>
-        <option value="weekly">This Week</option>
-        <option value="monthly">This Month</option>
-      </select>
-    </div>
 
     <!-- Export (Admin only) -->
     <div v-if="user.role === 'admin'" class="mb-4 flex gap-2 items-center">
-      <label class="font-medium">Export by Date:</label>
+      <label class="font-medium">Export:</label>
       <select v-model="exportPeriod" class="border border-gray-300 rounded p-2">
         <option value="all">All</option>
         <option value="daily">Daily</option>
@@ -55,7 +53,7 @@
 
       <button
         @click="exportChangeovers"
-        class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+        class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-600"
       >
         Download CSV
       </button>

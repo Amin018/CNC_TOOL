@@ -186,3 +186,72 @@ def export_changeovers_to_csv(
         media_type="text/csv",
         background=background_tasks
     )
+
+@router.get("/export/tools")
+def export_tool_to_csv(
+    background_tasks: BackgroundTasks,
+    period: str = Query("all", enum=["daily", "weekly", "monthly", "all"]),
+    db: Session = Depends(database.get_db),
+    current_user: models.User = Depends(require_admin),
+):
+    # Base query
+    query = db.query(models.ToolRequest)
+
+    # Get current time
+    now = datetime.now()
+
+    # Filter by period
+    if period == "daily":
+        start_date = now.replace(hour=0, minute=0, second=0, microsecond=0)
+        query = query.filter(models.ToolRequest.time_requested >= start_date)
+    elif period == "weekly":
+        start_date = now - timedelta(days=7)
+        query = query.filter(models.ToolRequest.time_requested >= start_date)
+    elif period == "monthly":
+        start_date = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+        query = query.filter(models.ToolRequest.time_requested >= start_date)
+
+    tools = query.all()
+
+    # Convert to list of dicts
+    data = [
+        {
+            "id": c.id,
+            "status": c.status,
+            "production_line": c.production_line,
+            "machine_no": c.machine_no,
+            "part_no": c.part_no,
+            "tool_name": c.tool_name,
+            "quantity": c.quantity,
+
+
+            "requested_by": c.requested_by,
+            "time_requested": c.time_requested.strftime("%Y-%m-%d %H:%M:%S") if c.time_requested else None,
+            "concurred_by": c.concurred_by,
+            "time_concurred": c.time_concurred.strftime("%Y-%m-%d %H:%M:%S") if c.time_concurred else None,
+
+            "prepared_by": c.prepared_by,
+            "time_prepared": c.time_prepared.strftime("%Y-%m-%d %H:%M:%S") if c.time_prepared else None,
+            "completed_and_received_by": c.received_and_completed_by,
+            "time_completed": c.time_completed.strftime("%Y-%m-%d %H:%M:%S") if c.time_completed else None,
+
+            "remark": c.remark
+        }
+        for c in tools
+    ]
+
+    # Save to CSV
+    file_path = f"toolsRequest_export_{period}.csv"
+    df = pd.DataFrame(data)
+    df.to_csv(file_path, index=False)
+    #print(f"Saving CSV at {file_path}")
+    #background_tasks.add_task(lambda: print(f"Deleting {file_path}"))
+    background_tasks.add_task(os.remove, file_path)
+
+    # Return file with delete after response
+    return FileResponse(
+        path=file_path,
+        filename=file_path,
+        media_type="text/csv",
+        background=background_tasks
+    )
