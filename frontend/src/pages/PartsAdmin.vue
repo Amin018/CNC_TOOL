@@ -10,6 +10,13 @@
       <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Add</button>
     </form>
 
+    <!-- Search Filter -->
+    <input
+      v-model="searchQuery"
+      placeholder="Search Part No..."
+      class="border p-2 rounded w-1/3 mb-4"
+    />
+
     <!-- Parts Table -->
     <table class="min-w-full border border-gray-200">
       <thead>
@@ -22,7 +29,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="part in parts" :key="part.id" class="hover:bg-gray-50">
+        <tr v-for="part in filteredParts" :key="part.id" class="hover:bg-gray-50">
           <!-- <td class="px-4 py-2 border">{{ part.id }}</td> -->
           <td class="px-4 py-2 border">{{ part.part_no }}</td>
           <td class="px-4 py-2 border">{{ part.description }}</td>
@@ -39,11 +46,12 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import api from "../api/axios";
 
 const parts = ref([]);
 const newPart = ref({ part_no: "", description: "", package: "" });
+const searchQuery = ref(""); // Add search input
 const user = ref({ username: "", role: "" });
 
 async function fetchRole() {
@@ -81,6 +89,13 @@ async function deletePart(id) {
     }}
     
 }
+
+// FILTERED LIST (live search)
+const filteredParts = computed(() => {
+  return parts.value.filter(part =>
+    part.part_no.toLowerCase().includes(searchQuery.value.toLowerCase())
+  );
+});
 
 onMounted(() => {
   fetchRole();
