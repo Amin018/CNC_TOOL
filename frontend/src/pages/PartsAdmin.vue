@@ -12,9 +12,16 @@
 
     <!-- Search Filter -->
     <input
-      v-model="searchQuery"
+      v-model="searchPart"
       placeholder="Search Part No..."
-      class="border p-2 rounded w-1/3 mb-4"
+      class="border p-2 rounded w-1/4 mb-4"
+    />
+
+    <!-- Search by Package -->
+    <input
+      v-model="searchPackage"
+      placeholder="Search Package..."
+      class="border p-2 rounded w-1/4 mb-4 ml-4"
     />
 
     <!-- Parts Table -->
@@ -51,7 +58,8 @@ import api from "../api/axios";
 
 const parts = ref([]);
 const newPart = ref({ part_no: "", description: "", package: "" });
-const searchQuery = ref(""); // Add search input
+const searchPart = ref(""); // Add search input
+const searchPackage = ref("");
 const user = ref({ username: "", role: "" });
 
 async function fetchRole() {
@@ -91,10 +99,24 @@ async function deletePart(id) {
 }
 
 // FILTERED LIST (live search)
+//const filteredParts = computed(() => {
+// return parts.value.filter(part =>
+//    part.part_no.toLowerCase().includes(searchQuery.value.toLowerCase())
+//  );
+//});
+
 const filteredParts = computed(() => {
-  return parts.value.filter(part =>
-    part.part_no.toLowerCase().includes(searchQuery.value.toLowerCase())
-  );
+  return parts.value.filter(part => {
+    const matchPart =
+      !searchPart.value ||
+      part.part_no.toLowerCase().includes(searchPart.value.toLowerCase());
+
+    const matchPackage =
+      !searchPackage.value ||
+      part.package.toLowerCase().includes(searchPackage.value.toLowerCase());
+
+    return matchPart && matchPackage; // both conditions must be true
+  });
 });
 
 onMounted(() => {
