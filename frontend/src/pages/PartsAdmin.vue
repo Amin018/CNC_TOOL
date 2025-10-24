@@ -109,11 +109,11 @@ const filteredParts = computed(() => {
   return parts.value.filter(part => {
     const matchPart =
       !searchPart.value ||
-      part.part_no.toLowerCase().includes(searchPart.value.toLowerCase());
+      (part.part_no || "").toLowerCase().includes(searchPart.value.toLowerCase());
 
     const matchPackage =
       !searchPackage.value ||
-      part.package.toLowerCase().includes(searchPackage.value.toLowerCase());
+      (part.package || "").toLowerCase().includes(searchPackage.value.toLowerCase());
 
     return matchPart && matchPackage; // both conditions must be true
   });
