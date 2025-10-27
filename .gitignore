@@ -1,7 +1,7 @@
 # Python
 venv/
 __pycache__/
-app/routers/__pycache__
+app/routers/__pycache__/
 *.pyc
 
 # Node
