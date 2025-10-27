@@ -100,6 +100,21 @@ def require_user(current_user: models.User = Depends(get_current_user)):
         )
     return current_user
 
+def require_user_or_leader(current_user: models.User = Depends(get_current_user)):
+    if current_user.role not in ["user", "leader"]:
+        raise HTTPException(status_code=403, detail="Not authorized")
+    return current_user
+
+def require_leader_or_admin(current_user: models.User = Depends(get_current_user)):
+    if current_user.role not in ["leader", "admin"]:
+        raise HTTPException(status_code=403, detail="Not authorized")
+    return current_user
+
+def require_tool_or_admin(current_user: models.User = Depends(get_current_user)):
+    if current_user.role not in ["tool", "admin"]:
+        raise HTTPException(status_code=403, detail="Not authorized")
+    return current_user
+
 def require_role(allowed_roles: list[str]):
     """ Generic role checker factory """
     def role_checker(current_user: models.User = Depends(get_current_user)):

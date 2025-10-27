@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Security
 from sqlalchemy.orm import Session
 from typing import List
 from datetime import datetime
@@ -6,7 +6,7 @@ from datetime import datetime
 from app.database import get_db
 from app import models, schemas, database
 from app.models import ChangeoverStatus
-from app.routers.auth import get_current_user, require_admin, require_leader, require_tool, require_user  # assumes this returns current_user dict with role
+from app.routers.auth import get_current_user, require_admin, require_leader, require_tool, require_user, require_role, require_leader_or_admin, require_tool_or_admin, require_user_or_leader  # assumes this returns current_user dict with role
 import pytz
 
 malaysia_tz = pytz.timezone("Asia/Kuala_Lumpur")
@@ -48,12 +48,12 @@ def delete_user(
     return
 
 
-# ----- CREATE REQUEST (User) -----
+# ----- CREATE REQUEST (User/Leader) -----
 @router.post("/", response_model=schemas.ChangeoverResponse)
 def create_changeover_request(
     request: schemas.ChangeoverCreate,
     db: Session = Depends(get_db),
-    current_user: models.User = Depends(require_user)
+    current_user: models.User = Depends(require_user_or_leader)
 ):
     new_request = models.Changeover(
         production_line=request.production_line,
@@ -75,7 +75,7 @@ def create_changeover_request(
 def concur_changeover_request(
     changeover_id: int,
     db: Session = Depends(get_db),
-    current_user: models.User = Depends(require_admin or require_leader)  # Admin/Leader only
+    current_user: models.User = Depends(require_leader_or_admin)  # Admin/Leader only
 ):
     changeover = db.get(models.Changeover, changeover_id)
     if not changeover:
@@ -92,7 +92,7 @@ def concur_changeover_request(
 def acknowledge_changeover_request(
     changeover_id: int,
     db: Session = Depends(get_db),
-    current_user: models.User = Depends(require_tool)  # Admin/Leader only
+    current_user: models.User = Depends(require_tool_or_admin)  # Admin/Leader only
 ):
     changeover = db.get(models.Changeover, changeover_id)
     if not changeover:
@@ -111,7 +111,7 @@ def tool_return_request(
     changeover_id: int,
     request: schemas.ChangeoverUpdate,  # <-- Accept remark here
     db: Session = Depends(get_db),
-    current_user: models.User = Depends(require_user)  # User role
+    current_user: models.User = Depends(require_user_or_leader)
 ):
     changeover = db.get(models.Changeover, changeover_id)
     if not changeover:
@@ -133,7 +133,7 @@ def tool_return_request(
 def tool_received_request(
     changeover_id: int,
     db: Session = Depends(get_db),
-    current_user: models.User = Depends(require_tool)  # Admin/Leader only
+    current_user: models.User = Depends(require_tool_or_admin)  # Admin/Leader only
 ):
     changeover = db.get(models.Changeover, changeover_id)
     if not changeover:
@@ -152,7 +152,7 @@ def tool_prepare_request(
     changeover_id: int,
     request: schemas.ChangeoverToolPrepare,  # <-- Accept remark here
     db: Session = Depends(get_db),
-    current_user: models.User = Depends(require_tool)  # User role
+    current_user: models.User = Depends(require_tool_or_admin)  # User role
 ):
     changeover = db.get(models.Changeover, changeover_id)
     if not changeover:
@@ -174,7 +174,7 @@ def tool_prepare_request(
 def tool_complete_request(
     changeover_id: int,
     db: Session = Depends(get_db),
-    current_user: models.User = Depends(require_user) 
+    current_user: models.User = Depends(require_user_or_leader) 
 ):
     changeover = db.get(models.Changeover, changeover_id)
     if not changeover:

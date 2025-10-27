@@ -5,7 +5,7 @@
 
       <!-- Only user can create -->
       <button
-        v-if="user.role === 'user'"
+        v-if="user.role === 'user' || user.role === 'leader'"
         @click="router.push('/changeovers/new')"
         class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
       >

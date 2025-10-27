@@ -26,7 +26,7 @@
 
         <!-- Tool Replace (Tool role) -->
         <div
-          v-if="user.role === 'tool' && tool.status === 'In_Progress' && !tool.prepared_by"
+          v-if="(user.role === 'tool'|| user.role === 'leader') && tool.status === 'In_Progress' && !tool.prepared_by"
           class="mt-6 border-t pt-6"
         >
           <h2 class="text-xl font-bold mb-4">Prepare/Replace Tool</h2>
@@ -68,7 +68,7 @@
           </button>
 
           <button
-            v-if="user.role === 'user' && tool.prepared_by && tool.status === 'In_Progress'"
+            v-if="(user.role === 'user' || user.role === 'leader') && tool.prepared_by && tool.status === 'In_Progress'"
             @click="completeTool"
             class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
           >

@@ -151,6 +151,7 @@ async function fetchMachines() {
 
 function filterMachines() {
   filteredMachines.value = machines.value.filter(m => m.production_line === selectedLine.value)
+  form.value.production_line = selectedLine.value
 }
 
 onMounted(fetchMachines)

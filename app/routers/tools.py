@@ -6,7 +6,7 @@ from datetime import datetime
 from app.database import get_db
 from app import models, schemas, database
 from app.models import ToolStatus
-from app.routers.auth import get_current_user, require_admin, require_leader, require_tool, require_user  # assumes this returns current_user dict with role
+from app.routers.auth import get_current_user, require_admin, require_leader, require_tool, require_user, require_user_or_leader, require_leader_or_admin, require_tool_or_admin  # assumes this returns current_user dict with role
 import pytz
 
 
@@ -42,7 +42,7 @@ def get_changeover_by_id(
 def create_tool_request(
     request: schemas.ToolRequestCreate,
     db: Session = Depends(get_db),
-    current_user: models.User = Depends(require_user)
+    current_user: models.User = Depends(require_user_or_leader)
 ):
     new_request = models.ToolRequest(
         production_line=request.production_line,
@@ -65,7 +65,7 @@ def create_tool_request(
 def concur_tool_request(
     tool_id: int,
     db: Session = Depends(get_db),
-    current_user: models.User = Depends(require_admin or require_leader)  # Admin/Leader only
+    current_user: models.User = Depends(require_leader_or_admin)  # Admin/Leader only
 ):
     Tool_Request = db.get(models.ToolRequest, tool_id)
     if not Tool_Request:
@@ -86,7 +86,7 @@ def tool_received_request(
     tool_id: int,
     request: schemas.ToolRequestUpdate,
     db: Session = Depends(get_db),
-    current_user: models.User = Depends(require_tool)  # Admin/Leader only
+    current_user: models.User = Depends(require_leader_or_admin)  # Admin/Leader only
 ):
     Tool_Request = db.get(models.ToolRequest, tool_id)
     if not Tool_Request:
@@ -106,7 +106,7 @@ def tool_received_request(
 def tool_complete_request(
     tool_id: int,
     db: Session = Depends(get_db),
-    current_user: models.User = Depends(require_user)
+    current_user: models.User = Depends(require_user_or_leader)
 ):
     Tool_Request = db.get(models.ToolRequest, tool_id)
     if not Tool_Request:

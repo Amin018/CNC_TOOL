@@ -6,7 +6,7 @@
       <div v-if="isLoading" class="text-center text-gray-500">Loading...</div>
       <div v-else>
         <!-- Changeover Info -->
-        <div class="grid grid-cols-2 gap-4 mb-6">
+        <div class="grid grid-cols-2 sm:text-sm md:text-base gap-4 mb-6">
           <div><strong>ID:</strong> {{ changeover.id }}</div>
           <div><strong>Status:</strong> {{ changeover.status }}</div>
           <div><strong>Production Line:</strong> {{ changeover.production_line }}</div>
@@ -17,7 +17,7 @@
           <div><strong>Requested By:</strong> {{ changeover.requested_by }}</div>
           <div><strong>Time Requested:</strong> {{ formatDate(changeover.time_requested) }}</div>
           <div><strong>Concurred By:</strong> {{ changeover.concurred_by || "None" }}</div>
-          <div><strong>Concurred By:</strong> {{ changeover.time_concurred || "None" }}</div>
+          <div><strong>Time Concurred:</strong> {{ changeover.time_concurred || "None" }}</div>
           <div><strong>Acknowledged By:</strong> {{ changeover.acknowledged_by || "None" }}</div>
           <div><strong>Time Acknowledged:</strong> {{ formatDate(changeover.time_acknowledged) || "None" }}</div>
           <div><strong>Returned By:</strong> {{ changeover.tool_return_by || "None" }}</div>
@@ -30,7 +30,7 @@
         </div>
 
         <!-- Tool Return -->
-        <div v-if="user.role === 'user' && changeover.status === 'In_Progress' && !changeover.tool_return_by" class="mt-6 border-t pt-6">
+        <div v-if="(user.role === 'user' || user.role === 'leader') && changeover.status === 'In_Progress' && !changeover.tool_return_by" class="mt-6 border-t pt-6">
           <h2 class="text-xl font-bold mb-4">Tool Return</h2>
 
           <form @submit.prevent="submitToolReturn" class="space-y-4">
@@ -74,7 +74,7 @@
         </div>
 
         <!-- New Tool Setup -->
-        <div v-if="user.role === 'tool' && changeover.status === 'Returned' && changeover.new_tool_by === null" class="mt-6 border-t pt-6">
+        <div v-if="(user.role === 'tool' || user.role === 'admin') && changeover.status === 'Returned' && changeover.new_tool_by === null" class="mt-6 border-t pt-6">
           <h2 class="text-xl font-bold mb-4">Tool Return</h2>
 
           <form @submit.prevent="submitToolPrepare" class="space-y-4">
@@ -129,7 +129,7 @@
           </button>
 
           <button
-            v-if="user.role === 'tool' && changeover.concurred_by && changeover.status === 'Pending'"
+            v-if="(user.role === 'tool' || user.role === 'admin') && changeover.concurred_by && changeover.status === 'Pending'"
             @click="acknowledgeChangeover"
             class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
           >
@@ -137,7 +137,7 @@
           </button>
 
           <button
-            v-if="user.role === 'tool' && changeover.tool_return_by && !changeover.confirm_and_received_by"
+            v-if="(user.role === 'tool' || user.role === 'admin') && changeover.tool_return_by && !changeover.confirm_and_received_by"
             @click="receiveTool"
             class="bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600"
           >
@@ -146,7 +146,7 @@
 
 
           <button
-            v-if="user.role === 'user' && changeover.new_tool_by && changeover.status !== 'Completed'" 
+            v-if="(user.role === 'user' || user.role === 'leader') && changeover.new_tool_by && changeover.status !== 'Completed'" 
             @click="completeRequest"
             class="bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600"
           >
