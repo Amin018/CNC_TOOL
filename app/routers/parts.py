@@ -27,7 +27,7 @@ def create_part(
 # List all parts
 @router.get("/", response_model=list[schemas.PartResponse])
 def list_parts(db: Session = Depends(database.get_db)):
-    return db.query(models.Part).all()
+    return db.query(models.Part).order_by(models.Part.id).all()
 
 # Delete part (Admin only)
 @router.delete("/{part_id}", status_code=status.HTTP_204_NO_CONTENT)

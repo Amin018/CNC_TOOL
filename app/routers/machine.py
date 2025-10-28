@@ -9,7 +9,11 @@ router = APIRouter(prefix="/machines", tags=["Machines"])
 
 @router.get("/", response_model=List[schemas.MachineResponse])
 def list_machines(db: Session = Depends(database.get_db)):
-    return db.query(models.Machine).all()
+    return db.query(models.Machine).order_by(
+        models.Machine.production_line.asc(),  # Groups by production line
+        #models.Machine.status.desc(),          # Active first
+        models.Machine.machine_no.asc()        # Optional: sort by machine number inside line
+    ).all()
 
 @router.post("/", response_model=schemas.MachineResponse)
 def add_machine(

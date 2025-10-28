@@ -92,12 +92,14 @@ const createUser = async () => {
 
 // Update user role
 const updateUserRole = async (user) => {
-  try {
+  if (window.confirm("Update Role?")){
+    try {
     await api.put(`/admin/users/${user.id}`, { role: user.role });
     alert("User role updated!");
   } catch (err) {
     console.error("Error updating role:", err);
-  }
+  }}
+ 
 };
 
 // Delete user

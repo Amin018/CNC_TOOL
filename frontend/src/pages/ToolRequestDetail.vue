@@ -74,6 +74,14 @@
           >
             Receive & Complete
           </button>
+
+          <button
+            v-if="(user.role === 'admin')"
+            @click="deleteRequest"
+            class="bg-red-500 text-white self-end px-4 py-2 rounded hover:bg-red-600 ml-auto"
+          >
+            DELETE
+          </button>
         </div>
       </div>
     </div>
@@ -151,6 +159,19 @@ async function submitToolReplace() {
 async function completeTool() {
   await api.put(`/tools/${route.params.id}/toolcomplete`)
   await fetchToolRequest()
+}
+
+async function deleteRequest() {
+  if (window.confirm("Are you sure?")){
+    try {
+    await api.delete(`/tools/${route.params.id}`)
+    alert("Request deleted!")
+    //await fetchC()
+    router.push("/tools")
+  } catch (err) {
+    console.error("Error deleting request:", err);
+  }};
+  
 }
 
 let intervalId

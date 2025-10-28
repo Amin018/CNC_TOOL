@@ -19,7 +19,7 @@ def get_all_changeover_requests(
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user)
 ):
-    return db.query(models.Changeover).all()
+    return db.query(models.Changeover).order_by(models.Changeover.id).all()
 
 # ----- SEE REEQUST DETAILS (Everyone) -----
 @router.get("/{changeover_id}", response_model=schemas.ChangeoverResponse)

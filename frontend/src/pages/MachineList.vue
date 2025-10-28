@@ -15,7 +15,6 @@
     <table class="table-auto border w-full">
       <thead>
         <tr class="bg-gray-100">
-          <th class="px-4 py-2 border">ID</th>
           <th class="px-4 py-2 border">Production Line</th>
           <th class="px-4 py-2 border">Machine No</th>
           <th class="px-4 py-2 border">Status</th>
@@ -24,7 +23,6 @@
       </thead>
       <tbody>
         <tr v-for="machine in machines" :key="machine.id">
-          <td class="px-4 py-2 border">{{ machine.id }}</td>
           <td class="px-4 py-2 border">{{ machine.production_line }}</td>
           <td class="px-4 py-2 border">{{ machine.machine_no }}</td>
           <td class="px-4 py-2 border">

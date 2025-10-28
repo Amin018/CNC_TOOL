@@ -19,7 +19,7 @@ def get_all_tool_requests(
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user)
 ):
-    return db.query(models.ToolRequest).all()
+    return db.query(models.ToolRequest).order_by(models.ToolRequest.id).all()
 
 
 
@@ -119,3 +119,17 @@ def tool_complete_request(
     db.refresh(Tool_Request)
     return Tool_Request
 
+
+# ----- DELETE request (Admin) -----
+@router.delete("/{tool_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_tool_request(
+    tool_id: int,
+    db: Session = Depends(database.get_db),
+    current_user: models.User = Depends(require_admin),
+):
+    request = db.query(models.ToolRequest).get(tool_id)
+    if not request:
+        raise HTTPException(status_code=404, detail="request not found")
+    db.delete(request)
+    db.commit()
+    return

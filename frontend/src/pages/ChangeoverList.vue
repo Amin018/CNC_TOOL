@@ -66,7 +66,7 @@
           <tr class="bg-gray-100">
             <th class="px-4 py-2 border">ID</th>
             <th class="px-4 py-2 border">Machine</th>
-            <th class="px-4 py-2 border">Requested By</th>
+            <th class="px-4 py-2 border">Current Part No</th>
             <th class="px-4 py-2 border">Status</th>
             <th class="px-4 py-2 border">Requested At</th>
           </tr>
@@ -80,7 +80,7 @@
           >
             <td class="px-4 py-2 border">{{ changeover.id }}</td>
             <td class="px-4 py-2 border">{{ changeover.machine_no }}</td>
-            <td class="px-4 py-2 border">{{ changeover.requested_by }}</td>
+            <td class="px-4 py-2 border">{{ changeover.current_part_no }}</td>
             <td class="px-4 py-2 border">{{ changeover.status }}</td>
             <td class="px-4 py-2 border">{{ formatDate(changeover.time_requested) }}</td>
             <td class="p-3">

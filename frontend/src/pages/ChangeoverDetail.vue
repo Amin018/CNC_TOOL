@@ -6,7 +6,7 @@
       <div v-if="isLoading" class="text-center text-gray-500">Loading...</div>
       <div v-else>
         <!-- Changeover Info -->
-        <div class="grid grid-cols-2 sm:text-sm md:text-base gap-4 mb-6">
+        <div class="grid grid-cols-2 sm:text-sm lg:text-base gap-4 mb-6">
           <div><strong>ID:</strong> {{ changeover.id }}</div>
           <div><strong>Status:</strong> {{ changeover.status }}</div>
           <div><strong>Production Line:</strong> {{ changeover.production_line }}</div>
@@ -17,7 +17,7 @@
           <div><strong>Requested By:</strong> {{ changeover.requested_by }}</div>
           <div><strong>Time Requested:</strong> {{ formatDate(changeover.time_requested) }}</div>
           <div><strong>Concurred By:</strong> {{ changeover.concurred_by || "None" }}</div>
-          <div><strong>Time Concurred:</strong> {{ changeover.time_concurred || "None" }}</div>
+          <div><strong>Time Concurred:</strong> {{ formatDate(changeover.time_concurred || "None") }}</div>
           <div><strong>Acknowledged By:</strong> {{ changeover.acknowledged_by || "None" }}</div>
           <div><strong>Time Acknowledged:</strong> {{ formatDate(changeover.time_acknowledged) || "None" }}</div>
           <div><strong>Returned By:</strong> {{ changeover.tool_return_by || "None" }}</div>
@@ -153,6 +153,14 @@
             Complete Request
           </button>
 
+          <button
+            v-if="(user.role === 'admin')"
+            @click="deleteRequest"
+            class="bg-red-500 text-white self-end px-4 py-2 rounded hover:bg-red-600 ml-auto"
+          >
+            DELETE
+          </button>
+
         </div>
       </div>
     </div>
@@ -283,6 +291,19 @@ async function receiveTool() {
 async function completeRequest() {
   await api.put(`/changeovers/${route.params.id}/toolcomplete`)
   await fetchChangeover()
+}
+
+async function deleteRequest() {
+  if (window.confirm("Are you sure?")){
+    try {
+    await api.delete(`/changeovers/${route.params.id}`)
+    alert("Changeover deleted!")
+    //await fetchChangeover()
+    router.push("/changeovers")
+  } catch (err) {
+    console.error("Error deleting changeover:", err);
+  }};
+  
 }
 
 let intervalId;
