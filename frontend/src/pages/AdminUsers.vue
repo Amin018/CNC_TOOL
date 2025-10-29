@@ -92,13 +92,17 @@ const createUser = async () => {
 
 // Update user role
 const updateUserRole = async (user) => {
-  if (window.confirm("Update Role?")){
+  if (window.confirm("Update Role?")) {
     try {
-    await api.put(`/admin/users/${user.id}`, { role: user.role });
-    alert("User role updated!");
-  } catch (err) {
-    console.error("Error updating role:", err);
-  }}
+      await api.put(`/admin/users/${user.id}`, { role: user.role });
+      alert("User role updated!");
+    } catch (err) {
+      console.error("Error updating role:", err);
+      user.role = oldRole // rollback on API error too
+    }
+  } else {
+    fetchUsers();
+  }
  
 };
 
@@ -111,8 +115,8 @@ const deleteUser = async (id) => {
     fetchUsers();
   } catch (err) {
     console.error("Error deleting user:", err);
-  }};
-  
+  }}
+
 };
 
 onMounted(fetchUsers);
