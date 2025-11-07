@@ -17,7 +17,7 @@
           <div><strong>Requested By:</strong> {{ changeover.requested_by }}</div>
           <div><strong>Time Requested:</strong> {{ formatDate(changeover.time_requested) }}</div>
           <div><strong>Concurred By:</strong> {{ changeover.concurred_by || "None" }}</div>
-          <div><strong>Time Concurred:</strong> {{ formatDate(changeover.time_concurred || "None") }}</div>
+          <div><strong>Time Concurred:</strong> {{ formatDate(changeover.time_concurred) || "None" }}</div>
           <div><strong>Acknowledged By:</strong> {{ changeover.acknowledged_by || "None" }}</div>
           <div><strong>Time Acknowledged:</strong> {{ formatDate(changeover.time_acknowledged) || "None" }}</div>
           <div><strong>Returned By:</strong> {{ changeover.tool_return_by || "None" }}</div>
