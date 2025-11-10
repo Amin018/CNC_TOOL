@@ -62,7 +62,7 @@ def create_changeover_request(
         next_part_no=request.next_part_no,
         time_for_changeover=request.time_for_changeover,
         requested_by=current_user.username,  # username instead of ID
-        time_requested=datetime.now(malaysia_tz),
+        time_requested=datetime.now(malaysia_tz).replace(tzinfo=None),  # Ensure timezone-naive datetime
     )
     db.add(new_request)
     db.commit()
@@ -82,7 +82,7 @@ def concur_changeover_request(
         raise HTTPException(status_code=404, detail="Changeover not found")
     
     changeover.concurred_by = current_user.username
-    changeover.time_concurred = datetime.now(malaysia_tz)
+    changeover.time_concurred = datetime.now(malaysia_tz).replace(tzinfo=None)
     db.commit()
     db.refresh(changeover)
     return changeover
@@ -99,7 +99,7 @@ def acknowledge_changeover_request(
         raise HTTPException(status_code=404, detail="Changeover not found")
     
     changeover.acknowledged_by = current_user.username
-    changeover.time_acknowledged = datetime.now(malaysia_tz)
+    changeover.time_acknowledged = datetime.now(malaysia_tz).replace(tzinfo=None)
     changeover.status = ChangeoverStatus.IN_PROGRESS
     db.commit()
     db.refresh(changeover)
@@ -118,8 +118,7 @@ def tool_return_request(
         raise HTTPException(status_code=404, detail="Changeover not found")
     
     changeover.tool_return_by = current_user.username
-    changeover.time_return = datetime.now(malaysia_tz)
-
+    changeover.time_return = datetime.now(malaysia_tz).replace(tzinfo=None)
     # Save remark if provided
     if request.remark_return:
         changeover.remark_return = request.remark_return
@@ -140,7 +139,7 @@ def tool_received_request(
         raise HTTPException(status_code=404, detail="Changeover not found")
     
     changeover.confirm_and_received_by = current_user.username
-    changeover.time_received = datetime.now(malaysia_tz)
+    changeover.time_received = datetime.now(malaysia_tz).replace(tzinfo=None)
     changeover.status = ChangeoverStatus.RETURNED
     db.commit()
     db.refresh(changeover)
@@ -159,7 +158,7 @@ def tool_prepare_request(
         raise HTTPException(status_code=404, detail="Changeover not found")
     
     changeover.new_tool_by = current_user.username
-    changeover.time_prepared = datetime.now(malaysia_tz)
+    changeover.time_prepared = datetime.now(malaysia_tz).replace(tzinfo=None)
 
     # Save remark if provided
     if request.remark:
@@ -181,7 +180,7 @@ def tool_complete_request(
         raise HTTPException(status_code=404, detail="Changeover not found")
     
     changeover.completed_and_received_by = current_user.username
-    changeover.time_completed = datetime.now(malaysia_tz)
+    changeover.time_completed = datetime.now(malaysia_tz).replace(tzinfo=None)
     changeover.status = ChangeoverStatus.COMPLETED
     db.commit()
     db.refresh(changeover)

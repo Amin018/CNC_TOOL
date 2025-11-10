@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from typing import List
 from datetime import datetime, timedelta
+import pytz
 
 from app import models, schemas, database
 from app.utils import hash_password
@@ -16,6 +17,7 @@ from fastapi import BackgroundTasks
 
 router = APIRouter(prefix="/admin", tags=["Admin"])
 
+malaysia_tz = pytz.timezone("Asia/Kuala_Lumpur")
 
 # Dependency: Only allow admins
 '''def require_admin(user: models.User = Depends(get_current_user)):
@@ -122,7 +124,7 @@ def export_changeovers_to_csv(
     query = db.query(models.Changeover)
 
     # Get current time
-    now = datetime.now()
+    now = datetime.now(malaysia_tz)
 
     # Filter by period
     if period == "daily":
@@ -198,7 +200,7 @@ def export_tool_to_csv(
     query = db.query(models.ToolRequest)
 
     # Get current time
-    now = datetime.now()
+    now = datetime.now(malaysia_tz)
 
     # Filter by period
     if period == "daily":
