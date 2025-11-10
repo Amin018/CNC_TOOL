@@ -86,7 +86,7 @@ def tool_received_request(
     tool_id: int,
     request: schemas.ToolRequestUpdate,
     db: Session = Depends(get_db),
-    current_user: models.User = Depends(require_leader_or_admin)  # Admin/Leader only
+    current_user: models.User = Depends(require_tool_or_admin)  # Admin/Tool only
 ):
     Tool_Request = db.get(models.ToolRequest, tool_id)
     if not Tool_Request:
