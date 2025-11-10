@@ -6,28 +6,62 @@
       <div v-if="isLoading" class="text-center text-gray-500">Loading...</div>
       <div v-else>
         <!-- Changeover Info -->
-        <div class="grid grid-cols-2 sm:text-sm lg:text-base gap-4 mb-6">
-          <div><strong>ID:</strong> {{ changeover.id }}</div>
-          <div><strong>Status:</strong> {{ changeover.status }}</div>
-          <div><strong>Production Line:</strong> {{ changeover.production_line }}</div>
-          <div><strong>Machine:</strong> {{ changeover.machine_no }}</div>
-          <div><strong>Current Part:</strong> {{ changeover.current_part_no }}</div>
-          <div><strong>Next Part:</strong> {{ changeover.next_part_no }}</div>
-          <div><strong>Changeover Time:</strong> {{ formatDate(changeover.time_for_changeover) }}</div>
-          <div><strong>Requested By:</strong> {{ changeover.requested_by }}</div>
-          <div><strong>Time Requested:</strong> {{ formatDate(changeover.time_requested) }}</div>
-          <div><strong>Concurred By:</strong> {{ changeover.concurred_by || "None" }}</div>
-          <div><strong>Time Concurred:</strong> {{ formatDate(changeover.time_concurred) || "None" }}</div>
-          <div><strong>Acknowledged By:</strong> {{ changeover.acknowledged_by || "None" }}</div>
-          <div><strong>Time Acknowledged:</strong> {{ formatDate(changeover.time_acknowledged) || "None" }}</div>
-          <div><strong>Returned By:</strong> {{ changeover.tool_return_by || "None" }}</div>
-          <div><strong>Time Returned:</strong> {{ formatDate(changeover.time_return) || "None" }}</div>
-          <div><strong>Tool Setup:</strong> {{ changeover.new_tool_by || "None" }}</div>
-          <div><strong>Completed By:</strong> {{ changeover.completed_and_received_by || "None" }}</div>
-          <div><strong>Time Completed:</strong> {{ formatDate(changeover.time_completed) || "None" }}</div>
-          <div><strong>Tool Return Remarks:</strong> {{ changeover.remark_return || "None" }}</div>
-          <div><strong>Remarks:</strong> {{ changeover.remark || "None" }}</div>
+        <div class="space-y-3 mb-6">
+          <div class="flex justify-between pb-1">
+            <span><strong>ID:</strong> {{ changeover.id }}</span>
+            <span><strong>Status:</strong> {{ changeover.status }}</span>
+          </div>
+
+          <div class="flex justify-between pb-1">
+            <span><strong>Production Line:</strong> {{ changeover.production_line }}</span>
+            <span><strong>Machine:</strong> {{ changeover.machine_no }}</span>
+          </div>
+
+          <div class="flex justify-between pb-1">
+            <span><strong>Current Part:</strong> {{ changeover.current_part_no }}</span>
+            <span><strong>Next Part:</strong> {{ changeover.next_part_no }}</span>
+          </div>
+
+          <div class="flex justify-between border-b pb-4">
+            <span><strong>Changeover Time:</strong> {{ formatDate(changeover.time_for_changeover) }}</span>
+          </div>
+
+          <div class="flex justify-between pb-1">
+            <span><strong>Requested By:</strong> {{ changeover.requested_by }}</span>
+            <span><strong>Time Requested:</strong> {{ formatDate(changeover.time_requested) }}</span>
+          </div>
+
+          <div class="flex justify-between pb-1">
+            <span><strong>Concurred By:</strong> {{ changeover.concurred_by || "-" }}</span>
+            <span><strong>Time Concurred:</strong> {{ formatDate(changeover.time_concurred) || "-" }}</span>
+          </div>
+
+          <div class="flex justify-between pb-1">
+            <span><strong>Acknowledged By:</strong> {{ changeover.acknowledged_by || "-" }}</span>
+            <span><strong>Time Acknowledged:</strong> {{ formatDate(changeover.time_acknowledged) || "-" }}</span>
+          </div>
+
+          <div class="flex justify-between pb-1">
+            <span><strong>Returned By:</strong> {{ changeover.tool_return_by || "-" }}</span>
+            <span><strong>Time Returned:</strong> {{ formatDate(changeover.time_return) || "-" }}</span>
+          </div>
+
+          <div class="flex justify-between pb-1">
+            <span><strong>Tool Setup:</strong> {{ changeover.new_tool_by || "-" }}</span>
+            <span><strong>Time Tool Setup:</strong> {{ formatDate(changeover.time_prepared) || "-" }}</span>
+          </div>
+
+          <div class="flex justify-between pb-1">
+            <span><strong>Received By:</strong> {{ changeover.completed_and_received_by || "-" }}</span>
+            <span><strong>Time Completed:</strong> {{ formatDate(changeover.time_completed) || "-" }}</span>
+          </div>
+
+          <div class="flex justify-between ">
+            <span><strong>Remarks:</strong> {{ changeover.remark || "-" }}</span>
+            <span><strong>Tool Return Remarks:</strong> {{ changeover.remark_return || "-" }}</span>
+          </div>
         </div>
+
 
         <!-- Tool Return -->
         <div v-if="(user.role === 'user' || user.role === 'leader') && changeover.status === 'In_Progress' && !changeover.tool_return_by" class="mt-6 border-t pt-6">
@@ -209,7 +243,7 @@ const allCheckedforTool = computed(() => {
 
 const formatDate = (dateStr) => {
   if (!dateStr) return "-"
-  return new Date(dateStr).toLocaleString()
+  return new Date(dateStr).toLocaleString("en-MY")
 }
 
 async function fetchChangeover() {

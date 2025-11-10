@@ -6,27 +6,55 @@
       <div v-if="isLoading" class="text-center text-gray-500">Loading...</div>
       <div v-else>
         <!-- Tool Request Info -->
-        <div class="grid grid-cols-2 gap-4 mb-6">
-          <div><strong>ID:</strong> {{ tool.id }}</div>
-          <div><strong>Status:</strong> {{ tool.status }}</div>
-          <div><strong>Machine:</strong> {{ tool.machine_no }}</div>
-          <div><strong>Part No:</strong> {{ tool.part_no }}</div>
-          <div><strong>Tool Name:</strong> {{ tool.tool_name }}</div>
-          <div><strong>Quantity:</strong> {{ tool.quantity }}</div>
-          <div><strong>Requested By:</strong> {{ tool.requested_by }}</div>
-          <div><strong>Time Requested:</strong> {{ formatDate(tool.time_requested) }}</div>
-          <div><strong>Concurred By:</strong> {{ tool.concurred_by || "None" }}</div>
-          <div><strong>Time Concurred:</strong> {{ formatDate(tool.time_concurred) || "None" }}</div>
-          <div><strong>Prepared By:</strong> {{ tool.prepared_by || "None" }}</div>
-          <div><strong>Time Prepared:</strong> {{ formatDate(tool.time_prepared) || "None" }}</div>
-          <div><strong>Received By:</strong> {{ tool.received_and_completed_by || "None" }}</div>
-          <div><strong>Time Completed:</strong> {{ formatDate(tool.time_completed) || "None" }}</div>
-          <div><strong>Remark:</strong> {{ tool.remark || "None" }}</div>
+        <div class="space-y-3 mb-6">
+          <div class="flex justify-between pb-1">
+            <span><strong>ID:</strong> {{ tool.id }}</span>
+            <span><strong>Status:</strong> {{ tool.status }}</span>
+          </div>
+
+          <div class="flex justify-between pb-1">
+            <span><strong>Production Line:</strong> {{ tool.production_line }}</span>
+            <span><strong>Machine:</strong> {{ tool.machine_no }}</span>
+          </div>
+
+          <div class="flex justify-between border-b pb-4">
+            <span><strong>Current Part:</strong> {{ tool.part_no }}</span>
+          </div>
+
+          <div class="flex justify-between pb-1">
+            <span><strong>Tool Name:</strong> {{ tool.tool_name }}</span>
+            <span><strong>Quantity:</strong> {{ tool.quantity }}</span>
+          </div>
+
+          <div class="flex justify-between pb-1">
+            <span><strong>Requested By:</strong> {{ tool.requested_by }}</span>
+            <span><strong>Time Requested:</strong> {{ formatDate(tool.time_requested) }}</span>
+          </div>
+
+          <div class="flex justify-between pb-1">
+            <span><strong>Concurred By:</strong> {{ tool.concurred_by || "-" }}</span>
+            <span><strong>Time Concurred:</strong> {{ formatDate(tool.time_concurred) || "-" }}</span>
+          </div>
+
+          <div class="flex justify-between pb-1">
+            <span><strong>Prepared By:</strong> {{ tool.prepared_by || "-" }}</span>
+            <span><strong>Time Prepared:</strong> {{ formatDate(tool.time_prepared) || "-" }}</span>
+          </div>
+
+          <div class="flex justify-between pb-1">
+            <span><strong>Received By:</strong> {{ tool.received_and_completed_by || "-" }}</span>
+            <span><strong>Time Completed:</strong> {{ formatDate(tool.time_completed) || "-" }}</span>
+          </div>
+
+          <div class="flex justify-between ">
+            <span><strong>Remarks:</strong> {{ tool.remark || "-" }}</span>
+          </div>
         </div>
+
 
         <!-- Tool Replace (Tool role) -->
         <div
-          v-if="(user.role === 'tool'|| user.role === 'leader') && tool.status === 'In_Progress' && !tool.prepared_by"
+          v-if="(user.role === 'tool'|| user.role === 'admin') && tool.status === 'In_Progress' && !tool.prepared_by"
           class="mt-6 border-t pt-6"
         >
           <h2 class="text-xl font-bold mb-4">Prepare/Replace Tool</h2>
@@ -113,7 +141,7 @@ const allCheckedforTool = computed(() => {
 
 const formatDate = (dateStr) => {
   if (!dateStr) return "-"
-  return new Date(dateStr).toLocaleString()
+  return new Date(dateStr).toLocaleString("en-MY")
 }
 
 async function fetchToolRequest() {
