@@ -45,6 +45,11 @@
             <span><strong>Returned By:</strong> {{ changeover.tool_return_by || "-" }}</span>
             <span><strong>Time Returned:</strong> {{ formatDate(changeover.time_return) || "-" }}</span>
           </div>
+          
+          <div class="flex justify-between pb-1">
+            <span><strong>Received By:</strong> {{ changeover.confirm_and_received_by || "-" }}</span>
+            <span><strong>Time Received:</strong> {{ formatDate(changeover.time_received) || "-" }}</span>
+          </div>
 
           <div class="flex justify-between pb-1">
             <span><strong>Tool Setup:</strong> {{ changeover.new_tool_by || "-" }}</span>
@@ -52,7 +57,7 @@
           </div>
 
           <div class="flex justify-between pb-1">
-            <span><strong>Received By:</strong> {{ changeover.completed_and_received_by || "-" }}</span>
+            <span><strong>Completed By:</strong> {{ changeover.completed_and_received_by || "-" }}</span>
             <span><strong>Time Completed:</strong> {{ formatDate(changeover.time_completed) || "-" }}</span>
           </div>
 
@@ -155,7 +160,7 @@
         <!-- Actions -->
         <div class="flex flex-wrap gap-4 mt-6 border-t pt-6">
           <button
-            v-if="(user.role === 'leader' || user.role === 'admin') && changeover.status === 'Pending' && changeover.concurred_by === null"
+            v-if="(user.role === 'leader' || user.role === 'admin') && changeover.concurred_by === null"
             @click="concurChangeover"
             class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
           >
@@ -163,7 +168,7 @@
           </button>
 
           <button
-            v-if="(user.role === 'tool' || user.role === 'admin') && changeover.concurred_by && changeover.status === 'Pending'"
+            v-if="(user.role === 'tool' || user.role === 'admin') && changeover.status === 'Pending'"
             @click="acknowledgeChangeover"
             class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
           >
@@ -180,7 +185,7 @@
 
 
           <button
-            v-if="(user.role === 'user' || user.role === 'leader') && changeover.new_tool_by && changeover.status !== 'Completed'" 
+            v-if="(user.role === 'user' || user.role === 'leader') && changeover.new_tool_by && changeover.status !== 'Completed' && changeover.completed_and_received_by === null"
             @click="completeRequest"
             class="bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600"
           >

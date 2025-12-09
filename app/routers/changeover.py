@@ -83,6 +83,8 @@ def concur_changeover_request(
     
     changeover.concurred_by = current_user.username
     changeover.time_concurred = datetime.now(malaysia_tz).replace(tzinfo=None)
+    if changeover.completed_and_received_by:
+        changeover.status = ChangeoverStatus.COMPLETED
     db.commit()
     db.refresh(changeover)
     return changeover
@@ -181,7 +183,10 @@ def tool_complete_request(
     
     changeover.completed_and_received_by = current_user.username
     changeover.time_completed = datetime.now(malaysia_tz).replace(tzinfo=None)
-    changeover.status = ChangeoverStatus.COMPLETED
+
+    if changeover.concurred_by:
+        changeover.status = ChangeoverStatus.COMPLETED
+        
     db.commit()
     db.refresh(changeover)
     return changeover
