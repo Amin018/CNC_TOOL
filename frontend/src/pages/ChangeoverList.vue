@@ -94,10 +94,11 @@
 
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from "vue";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import api from "../api/axios";
 
 const router = useRouter();
+const route = useRoute();
 const changeovers = ref([]);
 const statusFilter = ref("");
 const user = ref({ username: "", role: "" })
@@ -123,8 +124,8 @@ const fetchChangeovers = async () => {
   }
   try {
     const res = await api.get("/changeovers/");
-    //console.log("Fetched changeovers:", res.data);
-    changeovers.value = res.data.reverse(); 
+    changeovers.value = res.data.reverse();
+    
   } catch (err) {
     console.error("Error fetching changeovers:", err);
   }
@@ -201,6 +202,11 @@ let intervalId;
 onMounted(async () => {
   try{
     await fetchUser();
+    if (route.query.status) {
+      statusFilter.value = route.query.status
+    } else {
+      statusFilter.value = ""
+    }
     await fetchChangeovers();
     intervalId = setInterval(() => {
       fetchChangeovers();

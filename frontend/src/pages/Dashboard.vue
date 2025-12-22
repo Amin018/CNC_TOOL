@@ -5,7 +5,7 @@
 
     <!-- KPI Cards -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-      <div v-for="(value, key) in statusCounts" :key="key" class="bg-white p-6 rounded-xl shadow">
+      <div v-for="(value, key) in statusCounts" :key="key" class="bg-white p-6 rounded-xl shadow" @click="goToChangeovers(key)" style="cursor: pointer;">
         <h2 class="text-lg font-semibold text-gray-600 capitalize">{{ key }}</h2>
         <p class="text-3xl font-bold text-gray-900">{{ value }}</p>
       </div>
@@ -43,16 +43,21 @@
 
 <script setup>
 import { ref, onMounted, onUnmounted } from "vue";
+import { useRouter } from "vue-router";
 import api from "../api/axios";
 import { Chart, registerables } from "chart.js";
 
 Chart.register(...registerables);
 
+const router = useRouter();
+const isMounted = ref(false);
+let intervalId = null;
+
 const statusCounts = ref({
-  pending: 0,
-  in_progress: 0,
-  returned: 0,
-  completed: 0
+  Pending: 0,
+  In_Progress: 0,
+  Returned: 0,
+  Completed: 0
 });
 
 const recentChangeovers = ref([]);
@@ -70,10 +75,10 @@ async function fetchDashboardData() {
 
     // Count statuses
     statusCounts.value = {
-      pending: data.filter((c) => c.status === "Pending").length,
-      in_progress: data.filter((c) => c.status === "In_Progress").length,
-      returned: data.filter((c) => c.status === "Returned").length,
-      completed: data.filter((c) => c.status === "Completed").length
+      Pending: data.filter((c) => c.status === "Pending").length,
+      In_Progress: data.filter((c) => c.status === "In_Progress").length,
+      Returned: data.filter((c) => c.status === "Returned").length,
+      Completed: data.filter((c) => c.status === "Completed").length
     };
 
     // Recent 5 changeovers
@@ -90,9 +95,14 @@ async function fetchDashboardData() {
     const values = Object.values(grouped);
 
     
-    const ctx = document.getElementById("changeoverChart");
+    const canvas = document.getElementById("changeoverChart");
+    if (!canvas) return;
 
-    chartInstance.value = new Chart(ctx, {
+    if (chartInstance.value) {
+      chartInstance.value.destroy();
+    }
+
+    chartInstance.value = new Chart(canvas, {
       type: "bar",
       data: {
         labels,
@@ -118,22 +128,31 @@ async function fetchDashboardData() {
   }
 }
 
-let intervalId;
+async function goToChangeovers(status) {
+  router.push({
+    path: "/changeovers",
+    query: { status }
+  })
+}
+
+
 
 onMounted(() => {
+  isMounted.value = true;
   fetchDashboardData();
   intervalId = setInterval(() => {
-      if (chartInstance.value) {
-          chartInstance.value.destroy();
-          }
       fetchDashboardData();
+      console.log("Dashboard data refreshed")
   }, 60000); // Refresh every 60 seconds
 });
 
 onUnmounted(() => {
-  if (intervalId) clearInterval(intervalId);
+  isMounted.value = false;
+  if (intervalId){
+    clearInterval(intervalId);
+  }
   if (chartInstance.value) {
-    chartInstance.value.destroy()
+    chartInstance.value.destroy();
   }
 });
 </script>
