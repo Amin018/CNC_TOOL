@@ -113,7 +113,7 @@
         </div>
 
         <!-- New Tool Setup -->
-        <div v-if="(user.role === 'tool' || user.role === 'admin') && changeover.status === 'Returned' && changeover.new_tool_by === null" class="mt-6 border-t pt-6">
+        <div v-if="(user.role === 'tool' || user.role === 'admin') && changeover.status === 'Returned' && changeover.concurred_by && changeover.new_tool_by === null" class="mt-6 border-t pt-6">
           <h2 class="text-xl font-bold mb-4">Tool Return</h2>
 
           <form @submit.prevent="submitToolPrepare" class="space-y-4">
@@ -273,8 +273,14 @@ async function fetchUser() {
 }
 
 async function concurChangeover() {
-  await api.put(`/changeovers/${route.params.id}/concur`)
-  await fetchChangeover()
+  if (window.confirm("Are you sure?")){
+    if (window.confirm("Are you REALLY sure?")){
+      await api.put(`/changeovers/${route.params.id}/concur`)
+      await fetchChangeover()
+    }
+  }else{
+    return;
+  }
 }
 
 async function acknowledgeChangeover() {
