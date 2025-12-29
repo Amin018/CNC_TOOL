@@ -1,5 +1,5 @@
 # app/models.py
-from sqlalchemy import Integer, String, Boolean, DateTime, ForeignKey, Text
+from sqlalchemy import Integer, String, Boolean, DateTime, ForeignKey, Text, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from datetime import datetime
 from .database import Base
@@ -43,6 +43,28 @@ class Part(Base):
     part_no: Mapped[str] = mapped_column(String, unique=True, nullable=False)
     description: Mapped[str | None] = mapped_column(Text, nullable=True)
     package: Mapped[str | None] = mapped_column(String, nullable=True)
+
+    linked_parts = relationship(
+    "Part",
+    secondary="part_links",
+    primaryjoin="Part.id==part_links.c.part_id",
+    secondaryjoin="Part.id==part_links.c.linked_part_id",
+    backref="linked_to"
+    )
+
+
+class PartLink(Base):
+    __tablename__ = "part_links"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+
+    part_id: Mapped[int] = mapped_column(Integer, ForeignKey("parts.id", ondelete="CASCADE"), nullable=False)
+    linked_part_id: Mapped[int] = mapped_column(Integer, ForeignKey("parts.id", ondelete="CASCADE"), nullable=False)
+
+    __table_args__ = (
+        UniqueConstraint("part_id", "linked_part_id", name="unique_pair"),
+    )
+
 
 
 

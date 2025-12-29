@@ -273,14 +273,17 @@ async function fetchUser() {
 }
 
 async function concurChangeover() {
-  if (window.confirm("Are you sure?")){
-    if (window.confirm("Are you REALLY sure?")){
-      await api.put(`/changeovers/${route.params.id}/concur`)
-      await fetchChangeover()
+  if (
+      changeover.value.current_part_no.includes(",") ||
+      changeover.value.next_part_no.includes(",")
+    ) {
+      const ok = window.confirm("Are you sure to concur more than 1 part?");
+      if (!ok) return;   // stop function if user presses cancel
     }
-  }else{
-    return;
-  }
+
+  await api.put(`/changeovers/${route.params.id}/concur`)
+  await fetchChangeover()
+
 }
 
 async function acknowledgeChangeover() {
@@ -356,7 +359,6 @@ let intervalId;
 onMounted(() => {
   fetchUser();
   fetchChangeover();
-
   // Poll every 5 seconds
   intervalId = setInterval(() => {
     fetchChangeover();

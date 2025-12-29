@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from app.database import engine
 from app import models, database
-from app.routers import admin, users, auth, tools, changeover, parts, machine
+from app.routers import admin, users, auth, tools, changeover, parts, machine, part_links
 from fastapi import Depends
 from app.routers.auth import get_current_user
 from app import schemas
@@ -53,6 +53,7 @@ app.include_router(tools.router)
 app.include_router(auth.router)
 app.include_router(changeover.router)
 app.include_router(parts.router)
+app.include_router(part_links.router)
 app.include_router(machine.router)
 
 @app.get("/")

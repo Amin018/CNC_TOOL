@@ -37,12 +37,28 @@
               <li
                 v-for="part in suggestions"
                 :key="part.id"
-                @click="selectPart(part.part_no)"
+                @click="selectPart(part)"
                 class="p-2 hover:bg-gray-200 cursor-pointer"
               >
                 {{ part.part_no }} ; {{ part.description }}
               </li>
             </ul>
+            <div v-if="linkedParts.length" class="bg-white-100 border p-3 rounded mt-2">
+              <p class="font-semibold">Linked Parts</p>
+              <div v-for="lp in linkedParts" :key="lp.id">
+                <label>
+                  <input type="checkbox" :value="lp.part_no" v-model="selectedLinkedParts">
+                  {{ lp.part_no }} — {{ lp.description }}
+                </label>
+              </div>
+              <button
+                type="button"
+                class="mt-2 bg-blue-500 text-white px-3 py-1 rounded"
+                @click="applyLinkedToCurrent"
+              >
+                Add to Current Part
+              </button>
+            </div>
         </div>
 
         <!-- Next Part No with autocomplete -->
@@ -61,12 +77,30 @@
               <li
                 v-for="part in nextsuggestions"
                 :key="part.id"
-                @click="selectNewPart(part.part_no)"
+                @click="selectNewPart(part)"
                 class="p-2 hover:bg-gray-200 cursor-pointer"
               >
                 {{ part.part_no }} ; {{ part.description }}
               </li>
             </ul>
+
+            <div v-if="NextlinkedParts.length" class="bg-white-100 border p-3 rounded mt-2">
+              <p class="font-semibold">Linked Parts</p>
+              <div v-for="lp in NextlinkedParts" :key="lp.id">
+                <label>
+                  <input type="checkbox" :value="lp.part_no" v-model="NextselectedLinkedParts">
+                  {{ lp.part_no }} — {{ lp.description }}
+                </label>
+              </div>
+              <button
+                type="button"
+                class="mt-2 bg-blue-500 text-white px-3 py-1 rounded"
+                @click="NextapplyLinkedToCurrent"
+              >
+                Add to Next Part
+              </button>
+            </div>
+
         </div>
 
         <!-- Time for Changeover -->
@@ -115,6 +149,14 @@ async function submitChangeover() {
     form.value.current_part_no = currentPart.value
     form.value.next_part_no = nextPart.value
 
+    if (
+      currentPart.value.includes(",") ||
+      nextPart.value.includes(",")
+    ) {
+      const ok = window.confirm("Are you sure to submit more than 1 part?");
+      if (!ok) return;   // stop function if user presses cancel
+    }
+
     await api.post("/changeovers/", form.value)
     alert("Changeover request created successfully!")
     router.push("/changeovers") // redirect back to list
@@ -128,27 +170,60 @@ async function submitChangeover() {
 const currentPart = ref("")
 const suggestions = ref([])
 
+const linkedParts = ref([])
+const selectedLinkedParts = ref([])
+
 async function fetchParts(query) {
   if (query.length < 2) {
     suggestions.value = []
     return
   }
   try {
-    const res = await api.get(`/parts/search?query=${query}`)
+    const res = await api.get("/parts/search", {
+      params: { query: currentPart.value }
+    });
     suggestions.value = res.data
   } catch (err) {
     console.error("Error fetching parts:", err)
   }
 }
 
-function selectPart(partNo) {
-  currentPart.value = partNo
+async function selectPart(part){
+  currentPart.value = part.part_no
   suggestions.value = [] // hide dropdown after selection
+  
+  try {
+    const res = await api.get(`/partlinks/${part.id}`)
+    linkedParts.value = res.data
+    selectedLinkedParts.value = []
+  } catch (e) {
+    console.error(e)
+  }
+
 }
+
+function applyLinkedToCurrent() {
+  if (!selectedLinkedParts.value.length) return
+
+  const existing = currentPart.value.split(",").map(s => s.trim())
+
+  const merged = Array.from(new Set([
+    ...existing,
+    ...selectedLinkedParts.value
+  ])).filter(x => x)   // remove blanks
+
+  currentPart.value = merged.join(", ")
+  selectedLinkedParts.value = []
+  linkedParts.value = []
+}
+
 
 // Autocomplete for next part
 const nextPart = ref("")
 const nextsuggestions = ref([])
+
+const NextlinkedParts = ref([])
+const NextselectedLinkedParts = ref([])
 
 async function fetchNewParts(query) {
   if (query.length < 2) {
@@ -163,10 +238,36 @@ async function fetchNewParts(query) {
   }
 }
 
-function selectNewPart(partNo) {
-  nextPart.value = partNo
+async function selectNewPart(part) {
+  nextPart.value = part.part_no
   nextsuggestions.value = [] // hide dropdown after selection
+
+  try {
+    const res = await api.get(`/partlinks/${part.id}`)
+    NextlinkedParts.value = res.data
+    NextselectedLinkedParts.value = []
+  } catch (e) {
+    console.error(e)
+  }
+
 }
+
+function NextapplyLinkedToCurrent() {
+  if (!NextselectedLinkedParts.value.length) return
+
+  const existing = nextPart.value.split(",").map(s => s.trim())
+
+  const merged = Array.from(new Set([
+    ...existing,
+    ...NextselectedLinkedParts.value
+  ])).filter(x => x)   // remove blanks
+
+  nextPart.value = merged.join(", ")
+  NextselectedLinkedParts.value = []
+  NextlinkedParts.value = []
+}
+
+
 
 const machines = ref([])
 const productionLines = ref([])

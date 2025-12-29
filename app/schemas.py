@@ -123,6 +123,10 @@ class PartBase(BaseModel):
 class PartCreate(PartBase):
     pass
 
+class PartUpdate(BaseModel):
+    description: Optional[str] = None
+    package: Optional[str] = None
+
 class PartResponse(PartBase):
     id: int
 

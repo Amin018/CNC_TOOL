@@ -32,20 +32,14 @@
           <th class="px-4 py-2 border">Part No</th>
           <th class="px-4 py-2 border">Description</th>
           <th class="px-4 py-2 border">Package</th>
-          <th v-if="user.role == 'admin'" class="px-4 py-2 border">Actions</th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="part in filteredParts" :key="part.id" class="hover:bg-gray-50">
+        <tr v-for="part in filteredParts" :key="part.id" class="hover:bg-gray-50" @click="goToDetail(part.id)">
           <!-- <td class="px-4 py-2 border">{{ part.id }}</td> -->
           <td class="px-4 py-2 border">{{ part.part_no }}</td>
           <td class="px-4 py-2 border">{{ part.description }}</td>
           <td class="px-4 py-2 border">{{ part.package }}</td>
-          <td v-if="user.role == 'admin'" class="px-4 py-2 border text-center">
-            <button  @click="deletePart(part.id)" class="bg-red-500 text-white px-2 py-1 rounded ">
-              Delete
-            </button>
-          </td>
         </tr>
       </tbody>
     </table>
@@ -54,13 +48,20 @@
 
 <script setup>
 import { ref, onMounted, computed } from "vue";
+import { useRouter } from "vue-router";
 import api from "../api/axios";
 
+const router = useRouter();
 const parts = ref([]);
 const newPart = ref({ part_no: "", description: "", package: "" });
 const searchPart = ref(""); // Add search input
 const searchPackage = ref("");
 const user = ref({ username: "", role: "" });
+
+// Navigate to detail
+const goToDetail = (id) => {
+  router.push(`/parts/${id}`);
+};
 
 async function fetchRole() {
   const res = await api.get("/auth/me");
@@ -75,6 +76,11 @@ async function fetchParts() {
 
 // Add part
 async function addPart() {
+  if (newPart.part_no = "") {
+    alert("Enter part number");
+    return;
+  }
+
   try {
     await api.post("/parts/", newPart.value);
     newPart.value = { part_no: "", description: "" };
@@ -85,18 +91,6 @@ async function addPart() {
   }
 }
 
-// Delete part
-async function deletePart(id) {
-  if(window.confirm("Are you sure you want to delete this part?")){
-    try {
-      await api.delete(`/parts/${id}`);
-      fetchParts();
-    } catch (err) {
-      alert("Error deleting part");
-      console.error(err);
-    }}
-    
-}
 
 // FILTERED LIST (live search)
 //const filteredParts = computed(() => {
