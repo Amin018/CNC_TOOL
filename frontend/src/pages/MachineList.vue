@@ -23,14 +23,14 @@
       </thead>
       <tbody>
         <tr v-for="machine in machines" :key="machine.id">
-          <td class="px-4 py-2 border-r">{{ machine.production_line }}</td>
-          <td class="px-4 py-2 border-r">{{ machine.machine_no }}</td>
-          <td class="px-4 py-2 border-r text-center">
+          <td class="px-4 py-2 border">{{ machine.production_line }}</td>
+          <td class="px-4 py-2 border">{{ machine.machine_no }}</td>
+          <td class="px-4 py-2 border text-center">
             <span :class="machine.status === 'Active' ? 'text-green-600' : 'text-red-600'">
                 {{ machine.status }}
             </span>
         </td>
-        <td v-if="user.role === 'admin'" class="px-4 py-2 border-r last:border-r-0 text-center">
+        <td v-if="user.role === 'admin'" class="px-4 py-2 border text-center">
         <button @click="toggleStatus(machine)" class="bg-yellow-500 text-white px-2 py-1 rounded">
             {{ machine.status === 'Active' ? 'Set Offline' : 'Set Active' }}
         </button>
