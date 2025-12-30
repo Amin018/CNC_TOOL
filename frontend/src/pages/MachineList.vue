@@ -30,7 +30,7 @@
                 {{ machine.status }}
             </span>
         </td>
-        <td v-if="user.role === 'admin'" class="px-4 py-2 border text-center">
+        <td v-if="user.role === 'admin'" class="px-4 py-2 border space-x-1 space-y-1 text-center">
         <button @click="toggleStatus(machine)" class="bg-yellow-500 text-white px-2 py-1 rounded">
             {{ machine.status === 'Active' ? 'Set Offline' : 'Set Active' }}
         </button>

@@ -5,7 +5,7 @@
       :class="[
         'bg-gray-900 text-white p-4 z-40 transform transition-transform duration-300',
         sidebarOpen ? 'translate-x-0' : '-translate-x-full',
-        'fixed inset-y-0 left-0 w-64 md:translate-x-0 md:static'
+        'fixed inset-y-0 left-0 w-64 md:md:translate-x-0 h-screen overflow-y-auto'
       ]"
     >
       <img
@@ -28,7 +28,7 @@
     </aside>
 
     <!-- Main content -->
-    <div class="flex-1 flex flex-col">
+    <div class="flex-1 flex flex-col md:ml-64">
       <!-- Top bar -->
       <header class="flex items-center justify-between bg-white shadow px-4 sm:px-6 py-3">
         <!-- Hamburger (mobile only) -->
