@@ -76,14 +76,14 @@ async function fetchParts() {
 
 // Add part
 async function addPart() {
-  if (newPart.part_no = "") {
+  if ((!newPart.value.part_no || newPart.value.part_no.trim() === "")) {
     alert("Enter part number");
     return;
   }
 
   try {
     await api.post("/parts/", newPart.value);
-    newPart.value = { part_no: "", description: "" };
+    newPart.value = {};
     fetchParts();
   } catch (err) {
     alert("Error adding part");

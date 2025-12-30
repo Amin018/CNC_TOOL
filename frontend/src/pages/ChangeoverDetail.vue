@@ -17,7 +17,7 @@
             <span><strong>Machine:</strong> {{ changeover.machine_no }}</span>
           </div>
 
-          <div class="flex justify-between pb-1">
+          <div class="flex justify-between space-x-4 pb-1">
             <span><strong>Current Part:</strong> {{ changeover.current_part_no }}</span>
             <span><strong>Next Part:</strong> {{ changeover.next_part_no }}</span>
           </div>
@@ -26,42 +26,42 @@
             <span><strong>Changeover Time:</strong> {{ formatDate(changeover.time_for_changeover) }}</span>
           </div>
 
-          <div class="flex justify-between pb-1">
+          <div class="flex justify-between space-x-4 pb-1">
             <span><strong>Requested By:</strong> {{ changeover.requested_by }}</span>
             <span><strong>Time Requested:</strong> {{ formatDate(changeover.time_requested) }}</span>
           </div>
 
-          <div class="flex justify-between pb-1">
+          <div class="flex justify-between space-x-4 pb-1">
             <span><strong>Concurred By:</strong> {{ changeover.concurred_by || "-" }}</span>
             <span><strong>Time Concurred:</strong> {{ formatDate(changeover.time_concurred) || "-" }}</span>
           </div>
 
-          <div class="flex justify-between pb-1">
+          <div class="flex justify-between space-x-4 pb-1">
             <span><strong>Acknowledged By:</strong> {{ changeover.acknowledged_by || "-" }}</span>
             <span><strong>Time Acknowledged:</strong> {{ formatDate(changeover.time_acknowledged) || "-" }}</span>
           </div>
 
-          <div class="flex justify-between pb-1">
+          <div class="flex justify-between space-x-4 pb-1">
             <span><strong>Returned By:</strong> {{ changeover.tool_return_by || "-" }}</span>
             <span><strong>Time Returned:</strong> {{ formatDate(changeover.time_return) || "-" }}</span>
           </div>
           
-          <div class="flex justify-between pb-1">
+          <div class="flex justify-between space-x-4 pb-1">
             <span><strong>Received By:</strong> {{ changeover.confirm_and_received_by || "-" }}</span>
             <span><strong>Time Received:</strong> {{ formatDate(changeover.time_received) || "-" }}</span>
           </div>
 
-          <div class="flex justify-between pb-1">
+          <div class="flex justify-between space-x-4 pb-1">
             <span><strong>Tool Setup:</strong> {{ changeover.new_tool_by || "-" }}</span>
             <span><strong>Time Tool Setup:</strong> {{ formatDate(changeover.time_prepared) || "-" }}</span>
           </div>
 
-          <div class="flex justify-between pb-1">
+          <div class="flex justify-between space-x-4 pb-1">
             <span><strong>Completed By:</strong> {{ changeover.completed_and_received_by || "-" }}</span>
             <span><strong>Time Completed:</strong> {{ formatDate(changeover.time_completed) || "-" }}</span>
           </div>
 
-          <div class="flex justify-between ">
+          <div class="flex justify-between space-x-4 pb-1">
             <span><strong>Remarks:</strong> {{ changeover.remark || "-" }}</span>
             <span><strong>Tool Return Remarks:</strong> {{ changeover.remark_return || "-" }}</span>
           </div>
