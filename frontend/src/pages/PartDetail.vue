@@ -192,6 +192,11 @@ async function addLink() {
     return;
   }
 
+  if (partId == linkId.value) {
+    alert("Cannot link same part no");
+    return;
+  }
+
   try {
     await api.post(`/partlinks/${partId}/${linkId.value}`)
     linkSearch.value = "";
