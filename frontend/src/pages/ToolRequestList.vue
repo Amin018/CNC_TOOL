@@ -64,9 +64,9 @@
     
     <!-- Table -->
     <div class="overflow-x-auto w-full">
-      <table class="table-fixed border border-gray-200 w-full">
+      <table class="table-fixed border border-gray-200 w-full text-xs sm:text-base">
         <thead>
-          <tr class="bg-gray-100 break-normal whitespace-normal text-xs sm:text-base">
+          <tr class="bg-gray-100 break-normal whitespace-normal ">
             <th class="px-4 py-2 border">ID</th>
             <th class="px-4 py-2 border truncate max-w-[200px] overflow-hidden whitespace-nowrap">Machine</th>
             <th class="px-4 py-2 border truncate max-w-[200px] overflow-hidden whitespace-nowrap">Part No</th>
