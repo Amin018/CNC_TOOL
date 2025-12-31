@@ -1,9 +1,9 @@
 <template>
   <div class="p-6">
-    <h1 class="text-2xl font-bold mb-4">Parts</h1>
+    <h1 class="text-lg sm:text-2xl font-bold mb-4">Parts</h1>
 
     <!-- Add Part Form -->
-    <form v-if="user.role === 'admin'" @submit.prevent="addPart" class="flex gap-4 mb-6">
+    <form v-if="user.role === 'admin'" @submit.prevent="addPart" class="flex gap-4 mb-6 text-xs sm:text-base">
       <input v-model="newPart.part_no" placeholder="Part No" class="border p-2 rounded w-1/3" />
       <input v-model="newPart.description" placeholder="Description" class="border p-2 rounded w-1/2" />
       <input v-model="newPart.package" placeholder="Package" class="border p-2 rounded w-1/4" />
@@ -14,20 +14,20 @@
     <input
       v-model="searchPart"
       placeholder="Search Part No..."
-      class="border p-2 rounded w-1/4 mb-4"
+      class="border p-2 rounded w-1/4 mb-4 text-xs sm:text-base"
     />
 
     <!-- Search by Package -->
     <input
       v-model="searchPackage"
       placeholder="Search Package..."
-      class="border p-2 rounded w-1/4 mb-4 ml-4"
+      class="border p-2 rounded w-1/4 mb-4 ml-4 text-xs sm:text-base"
     />
 
     <!-- Parts Table -->
-    <table class="min-w-full border border-gray-200">
+    <table class="table-fixed border border-gray-200 w-full">
       <thead>
-        <tr class="bg-gray-100">
+        <tr class="bg-gray-100 text-xs sm:text-base">
           <!--<th class="px-4 py-2 border">ID</th>-->
           <th class="px-4 py-2 border">Part No</th>
           <th class="px-4 py-2 border">Description</th>
@@ -35,11 +35,11 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="part in filteredParts" :key="part.id" class="hover:bg-gray-50" @click="goToDetail(part.id)">
+        <tr v-for="part in filteredParts" :key="part.id" class="hover:bg-gray-50 text-xs sm:text-base" @click="goToDetail(part.id)">
           <!-- <td class="px-4 py-2 border">{{ part.id }}</td> -->
-          <td class="px-4 py-2 border">{{ part.part_no }}</td>
-          <td class="px-4 py-2 border">{{ part.description }}</td>
-          <td class="px-4 py-2 border">{{ part.package }}</td>
+          <td class="px-4 py-2 border truncate max-w-[200px] overflow-hidden whitespace-nowrap">{{ part.part_no }}</td>
+          <td class="px-4 py-2 border truncate max-w-[200px] overflow-hidden whitespace-nowrap">{{ part.description }}</td>
+          <td class="px-4 py-2 border truncate max-w-[200px] overflow-hidden whitespace-nowrap">{{ part.package }}</td>
         </tr>
       </tbody>
     </table>

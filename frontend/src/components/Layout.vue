@@ -57,7 +57,7 @@
       </header>
 
       <!-- Routed page -->
-      <main class="flex-1 bg-gray-100 p-4 sm:p-6 overflow-y-auto">
+      <main class="flex-1 bg-gray-100 p-2 sm:p-6 overflow-auto">
         <router-view />
       </main>
     </div>

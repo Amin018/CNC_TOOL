@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-screen bg-gray-100 p-6">
     <!-- Title -->
-    <h1 class="text-3xl font-bold text-gray-800 mb-6">Dashboard</h1>
+    <h1 class="text-xl sm:text-3xl font-bold text-gray-800 mb-6">Dashboard</h1>
 
     <!-- KPI Cards -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">

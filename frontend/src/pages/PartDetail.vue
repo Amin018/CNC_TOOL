@@ -1,14 +1,14 @@
 <template>
-  <div class="p-6 max-w-4xl mx-auto">
-    <h1 class="text-2xl font-bold mb-4">
+  <div class="p-6 max-w-4xl mx-auto ">
+    <h1 class="text-lg sm:text-2xl font-bold mb-4">
       Part Details: {{ part.part_no }}
     </h1>
 
     <!-- PART INFO CARD -->
-    <div class="bg-white shadow rounded p-6 mb-6">
-      <h2 class="text-xl font-semibold mb-4">Part Information</h2>
+    <div class="bg-white shadow rounded p-6 mb-6 w-full">
+      <h2 class="text-lg sm:text-2xl font-semibold mb-4">Part Information</h2>
 
-      <div class="grid grid-cols-2 gap-4">
+      <div class="grid grid-cols-2 gap-4 text-xs sm:text-base">
         <div>
           <label class="font-medium">Part No</label>
           <input class="w-full p-2 border rounded bg-gray-100" disabled
@@ -28,7 +28,7 @@
         </div>
       </div>
 
-      <div class="flex justify-between mt-auto" v-if="user.role === 'admin'">
+      <div class="flex justify-between mt-auto text-xs sm:text-base" v-if="user.role === 'admin'">
         <button class="bg-blue-500 text-white px-6 py-2 hover:bg-blue-600 rounded" @click="savePart">Save</button>
         <button class="bg-red-500 text-white px-6 py-2 hover:bg-red-600 rounded" @click="deletePart">Delete</button>
       </div>
@@ -36,8 +36,8 @@
     </div>
 
     <!-- LINKED PARTS -->
-    <div class="bg-white shadow rounded p-6">
-      <h2 class="text-xl font-semibold mb-4">Linked Parts</h2>
+    <div class="bg-white shadow rounded p-6 text-xs sm:text-base">
+      <h2 class="text-lg font-semibold mb-4">Linked Parts</h2>
       <div v-if="user.role === 'admin'" class="space-y-3">
         <input
           v-model="linkSearch"
@@ -70,9 +70,9 @@
       </div>
 
       <!-- List -->
-      <table class="table-auto w-full mt-4 border">
+      <table class="table-fixed w-full mt-4 border text-xs sm:text-base">
         <thead>
-          <tr class="bg-gray-100">
+          <tr class="bg-gray-100 break-normal whitespace-normal">
             <th class="border px-4 py-2">Part No</th>
             <th class="border px-4 py-2">Description</th>
             <th v-if="user.role === 'admin'" class="border px-4 py-2" >Actions</th>
@@ -80,9 +80,9 @@
         </thead>
 
         <tbody>
-          <tr v-for="p in linkedParts" :key="p.id">
-            <td class="border px-4 py-2">{{ p.part_no }}</td>
-            <td class="border px-4 py-2">{{ p.description }}</td>
+          <tr v-for="p in linkedParts" :key="p.id" class="break-normal whitespace-normal">
+            <td class="border px-4 py-2 break-all whitespace-normal">{{ p.part_no }}</td>
+            <td class="border px-4 py-2 break-all whitespace-normal">{{ p.description }}</td>
             <td v-if="user.role === 'admin'" class="border px-4 py-2 text-center">
               <button @click="removeLink(p.id)"
                       class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"

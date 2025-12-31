@@ -1,13 +1,13 @@
 <template>
   <div class="p-6">
     <div class="flex justify-between items-center mb-4">
-      <h1 class="text-2xl font-bold">Changeover Requests</h1>
+      <h1 class="text-lg sm:text-2xl font-bold">Changeover Requests</h1>
 
       <!-- Only user can create -->
       <button
         v-if="user.role === 'user' || user.role === 'leader'"
         @click="router.push('/changeovers/new')"
-        class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+        class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 text-xs sm:text-base"
       >
         + New Changeover
       </button>
@@ -15,7 +15,7 @@
 
 
    <!-- Filters Container -->
-    <div class="grid grid-cols-2 gap-4 mb-4 max-w-md">
+    <div class="grid grid-cols-2 gap-4 mb-4 max-w-md text-xs sm:text-base">
       <!-- Status Filter -->
       <div class="flex items-center">
         <label class="w-32 font-medium">Filter by Status:</label>
@@ -42,7 +42,7 @@
 
 
     <!-- Export (Admin only) -->
-    <div v-if="user.role === 'admin'" class="mb-4 flex gap-2 items-center">
+    <div v-if="user.role === 'admin'" class="mb-4 flex gap-2 items-center text-xs sm:text-base">
       <label class="font-medium">Export:</label>
       <select v-model="exportPeriod" class="border border-gray-300 rounded p-2">
         <option value="all">All</option>
@@ -60,31 +60,29 @@
     </div>
 
     <!-- Table -->
-    <div class="overflow-x-auto">
-      <table class="table-auto border border-gray-200 w-full">
+    <div class="overflow-x-auto w-full">
+      <table class="table-fixed border border-gray-200 w-full">
         <thead>
-          <tr class="bg-gray-100">
+          <tr class="bg-gray-100 break-normal whitespace-normal text-xs sm:text-base">
             <th class="px-4 py-2 border">ID</th>
-            <th class="px-4 py-2 border">Machine</th>
-            <th class="px-4 py-2 border">Current Part No</th>
-            <th class="px-4 py-2 border">Status</th>
-            <th class="px-4 py-2 border">Requested At</th>
+            <th class="px-4 py-2 border truncate max-w-[200px] overflow-hidden whitespace-nowrap">Machine</th>
+            <th class="px-4 py-2 border truncate max-w-[200px] overflow-hidden whitespace-nowrap">Current Part No</th>
+            <th class="px-4 py-2 border truncate max-w-[200px] overflow-hidden whitespace-nowrap">Status</th>
+            <th class="hidden lg:table-cell px-4 py-2 border truncate max-w-[200px] overflow-hidden whitespace-nowrap">Requested At</th>
           </tr>
         </thead>
         <tbody>
           <tr
             v-for="changeover in filteredChangeovers"
             :key="changeover.id"
-            class="hover:bg-gray-50 cursor-pointer"
+            class="hover:bg-gray-50 cursor-pointer text-xs sm:text-base"
             @click="goToDetail(changeover.id)"
           >
             <td class="px-4 py-2 border">{{ changeover.id }}</td>
             <td class="px-4 py-2 border">{{ changeover.machine_no }}</td>
-            <td class="px-4 py-2 border">{{ changeover.current_part_no }}</td>
-            <td class="px-4 py-2 border">{{ changeover.status }}</td>
-            <td class="px-4 py-2 border">{{ formatDate(changeover.time_requested) }}</td>
-            <td class="p-3">
-          </td>
+            <td class="px-4 py-2 border truncate max-w-[200px] overflow-hidden whitespace-nowrap">{{ changeover.current_part_no }}</td>
+            <td class="px-4 py-2 border truncate max-w-[200px] overflow-hidden whitespace-nowrap">{{ changeover.status }}</td>
+            <td class="hidden lg:table-cell px-4 py-2 border">{{ formatDate(changeover.time_requested) }}</td>
           </tr>
         </tbody>
       </table>

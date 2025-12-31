@@ -1,13 +1,13 @@
 <template>
   <div class="p-6">
     <div class="flex justify-between items-center mb-4">
-      <h1 class="text-2xl font-bold">Tools Request</h1>
+      <h1 class="text-lg sm:text-2xl font-bold">Tools Request</h1>
 
       <!-- Only user/leader can create -->
       <button
         v-if="user.role === 'user' || user.role === 'leader'"
         @click="router.push('/tools/new')"
-        class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+        class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 text-xs sm:text-base"
       >
         + New Tool
       </button>
@@ -15,7 +15,7 @@
 
 
     <!-- Status Filter --> 
-    <div class="grid grid-cols-2 gap-4 mb-4 max-w-md">
+    <div class="grid grid-cols-2 gap-4 mb-4 max-w-md text-xs sm:text-base">
         <div class="flex items-center">
         <label class="w-32 font-medium">Filter by Status:</label>
         <select
@@ -45,7 +45,7 @@
     </div>
 
       <!-- Export (Admin only) -->
-      <div v-if="user.role === 'admin'" class="mb-4 flex gap-2 items-center">
+      <div v-if="user.role === 'admin'" class="mb-4 flex gap-2 items-center text-xs sm:text-base">
         <label class="font-medium">Export:</label>
         <select v-model="exportPeriod" class="border border-gray-300 rounded p-2">
           <option value="all">All</option>
@@ -63,15 +63,15 @@
       </div>
     
     <!-- Table -->
-    <div class="overflow-x-auto">
-      <table class="table-auto border border-gray-200 w-full">
+    <div class="overflow-x-auto w-full">
+      <table class="table-fixed border border-gray-200 w-full">
         <thead>
-          <tr class="bg-gray-100">
+          <tr class="bg-gray-100 break-normal whitespace-normal text-xs sm:text-base">
             <th class="px-4 py-2 border">ID</th>
-            <th class="px-4 py-2 border">Machine</th>
-            <th class="px-4 py-2 border">Part No</th>
-            <th class="px-4 py-2 border">Status</th>
-            <th class="px-4 py-2 border">Requested At</th>
+            <th class="px-4 py-2 border truncate max-w-[200px] overflow-hidden whitespace-nowrap">Machine</th>
+            <th class="px-4 py-2 border truncate max-w-[200px] overflow-hidden whitespace-nowrap">Part No</th>
+            <th class="px-4 py-2 border truncate max-w-[200px] overflow-hidden whitespace-nowrap">Status</th>
+            <th class="hidden lg:table-cell px-4 py-2 border truncate max-w-[200px] overflow-hidden whitespace-nowrap">Requested At</th>
           </tr>
         </thead>
         <tbody>
@@ -82,12 +82,10 @@
             @click="goToDetail(tool.id)"
           >
             <td class="px-4 py-2 border">{{ tool.id }}</td>
-            <td class="px-4 py-2 border">{{ tool.machine_no }}</td>
-            <td class="px-4 py-2 border">{{ tool.part_no }}</td>
-            <td class="px-4 py-2 border">{{ tool.status }}</td>
-            <td class="px-4 py-2 border">{{ formatDate(tool.time_requested) }}</td>
-            <td class="p-3">
-          </td>
+            <td class="px-4 py-2 border truncate max-w-[200px] overflow-hidden whitespace-nowrap">{{ tool.machine_no }}</td>
+            <td class="px-4 py-2 border truncate max-w-[200px] overflow-hidden whitespace-nowrap">{{ tool.part_no }}</td>
+            <td class="px-4 py-2 border truncate max-w-[200px] overflow-hidden whitespace-nowrap">{{ tool.status }}</td>
+            <td class="hidden lg:table-cell px-4 py-2 border">{{ formatDate(tool.time_requested) }}</td>
           </tr>
         </tbody>
       </table>
