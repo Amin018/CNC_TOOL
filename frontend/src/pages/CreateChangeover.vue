@@ -3,7 +3,7 @@
     <div class="bg-white p-6 rounded-xl shadow max-w-2xl mx-auto">
       <h1 class="text-lg sm:text-2xl font-bold mb-4">Create New Changeover</h1>
 
-      <form @submit.prevent="submitChangeover" class="space-y-4 text-xs sm:text-base">
+      <form @submit.prevent="submitChangeover" class="space-y-4 text-sm sm:text-base">
 
         <!-- Production Line -->
         <div>

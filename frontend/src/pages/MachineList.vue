@@ -3,7 +3,7 @@
     <h1 class="text-lg sm:text-2xl font-bold mb-4">Machine Management</h1>
 
     <!-- Add Machine -->
-     <div v-if="user.role === 'admin'" class="mb-4 text-xs sm:text-base">
+     <div v-if="user.role === 'admin'" class="mb-4 text-sm sm:text-base">
       <form v-if="user.role === 'admin'" @submit.prevent="addMachine" class="flex gap-2 mb-4">
       <input v-model="newMachine.production_line" placeholder="Production Line" class="border p-2 rounded w-1/3" required />
       <input v-model="newMachine.machine_no" placeholder="Machine No" class="border p-2 rounded w-1/3" required />
@@ -14,7 +14,7 @@
     <!-- List Machines -->
     <table class="table-fixed border w-full overflow-x-auto">
       <thead>
-        <tr class="bg-gray-100 break-normal whitespace-normal text-xs sm:text-base">
+        <tr class="bg-gray-100 break-normal whitespace-normal text-sm sm:text-base">
           <th class="px-4 py-2 border truncate max-w-[200px] overflow-hidden whitespace-nowrap">Production Line</th>
           <th class="px-4 py-2 border truncate max-w-[200px] overflow-hidden whitespace-nowrap">Machine No</th>
           <th class="px-4 py-2 border truncate max-w-[200px] overflow-hidden whitespace-nowrap">Status</th>
@@ -22,7 +22,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="machine in machines" :key="machine.id" class="text-xs sm:text-base">
+        <tr v-for="machine in machines" :key="machine.id" class="text-sm sm:text-base">
           <td class="px-4 py-2 border truncate max-w-[200px] overflow-hidden whitespace-nowrap">{{ machine.production_line }}</td>
           <td class="px-4 py-2 border truncate max-w-[200px] overflow-hidden whitespace-nowrap">{{ machine.machine_no }}</td>
           <td class="px-4 py-2 border text-center truncate max-w-[200px] overflow-hidden whitespace-nowrap">
@@ -31,7 +31,7 @@
             </span>
         </td>
         <td v-if="user.role === 'admin'" class="px-4 py-2 border space-x-1 space-y-1 text-center">
-        <button @click="toggleStatus(machine)" class="bg-yellow-500 text-white px-2 py-1">
+        <button @click="toggleStatus(machine)" class="bg-yellow-500 text-white px-2 py-1 rounded">
             {{ machine.status === 'Active' ? 'Set Offline' : 'Set Active' }}
         </button>
         <button  @click="deleteMachine(machine.id)" class="bg-red-500 text-white px-2 py-1 rounded">Delete</button>

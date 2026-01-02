@@ -6,7 +6,7 @@
       <div v-if="isLoading" class="text-center text-gray-500">Loading...</div>
       <div v-else>
         <!-- Changeover Info -->
-        <div class="space-y-3 mb-6 text-xs sm:text-base">
+        <div class="space-y-3 mb-6 text-sm sm:text-base">
           <div class="flex justify-between pb-1">
             <span><strong>ID:</strong> {{ changeover.id }}</span>
             <span><strong>Status:</strong> {{ changeover.status }}</span>

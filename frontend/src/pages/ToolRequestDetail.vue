@@ -6,7 +6,7 @@
       <div v-if="isLoading" class="text-center text-gray-500">Loading...</div>
       <div v-else>
         <!-- Tool Request Info -->
-        <div class="space-y-3 mb-6 text-xs sm:text-base">
+        <div class="space-y-3 mb-6 text-sm sm:text-base">
           <div class="flex justify-between pb-1">
             <span><strong>ID:</strong> {{ tool.id }}</span>
             <span><strong>Status:</strong> {{ tool.status }}</span>
@@ -55,7 +55,7 @@
         <!-- Tool Replace (Tool role) -->
         <div
           v-if="(user.role === 'tool'|| user.role === 'admin') && tool.status === 'In_Progress' && !tool.prepared_by"
-          class="mt-6 border-t pt-6 text-xs sm:text-base"
+          class="mt-6 border-t pt-6 text-sm sm:text-base"
         >
           <h2 class="text-xl font-bold mb-4">Prepare/Replace Tool</h2>
           <form @submit.prevent="submitToolReplace" class="space-y-4">
@@ -86,7 +86,7 @@
         </div>
 
         <!-- Actions -->
-        <div class="flex flex-wrap gap-4 mt-6 border-t pt-6 text-xs sm:text-base">
+        <div class="flex flex-wrap gap-4 mt-6 border-t pt-6 text-sm sm:text-base">
           <button
             v-if="(user.role === 'leader' || user.role === 'admin') && tool.status === 'Pending' && !tool.concurred_by"
             @click="concurTool"

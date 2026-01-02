@@ -7,7 +7,7 @@
       <button
         v-if="user.role === 'user' || user.role === 'leader'"
         @click="router.push('/tools/new')"
-        class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 text-xs sm:text-base"
+        class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 text-sm sm:text-base"
       >
         + New Tool
       </button>
@@ -15,7 +15,7 @@
 
 
     <!-- Status Filter --> 
-    <div class="grid grid-cols-2 gap-4 mb-4 max-w-md text-xs sm:text-base">
+    <div class="grid grid-cols-2 gap-4 mb-4 max-w-md text-sm sm:text-base">
         <div class="flex items-center">
         <label class="w-32 font-medium">Filter by Status:</label>
         <select
@@ -45,7 +45,7 @@
     </div>
 
       <!-- Export (Admin only) -->
-      <div v-if="user.role === 'admin'" class="mb-4 flex gap-2 items-center text-xs sm:text-base">
+      <div v-if="user.role === 'admin'" class="mb-4 flex gap-2 items-center text-sm sm:text-base">
         <label class="font-medium">Export:</label>
         <select v-model="exportPeriod" class="border border-gray-300 rounded p-2">
           <option value="all">All</option>
@@ -64,7 +64,7 @@
     
     <!-- Table -->
     <div class="overflow-x-auto w-full">
-      <table class="table-fixed border border-gray-200 w-full text-xs sm:text-base">
+      <table class="table-fixed border border-gray-200 w-full text-sm sm:text-base">
         <thead>
           <tr class="bg-gray-100 break-normal whitespace-normal ">
             <th class="px-4 py-2 border">ID</th>
