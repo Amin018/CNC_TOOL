@@ -86,6 +86,13 @@
           </tr>
         </tbody>
       </table>
+      <button
+            v-if="(user.role === 'admin') && changeovers.length > 0"
+            @click="deleteAll"
+            class="bg-red-500 text-white self-end px-4 py-2 rounded hover:bg-red-600 ml-auto mt-5"
+          >
+            DELETE
+      </button>
     </div>
   </div>
 </template>
@@ -193,6 +200,22 @@ const formatDate = (dateStr) => {
   if (!dateStr) return "-";
   return new Date(dateStr).toLocaleString();
 };
+
+async function deleteAll() {
+  const password = prompt("Enter admin password to confirm:");
+
+  if (!password) return;
+
+  try {
+    await api.delete("/changeovers/purge", {
+      data: { password }
+    });
+    alert("ALL Changeovers deleted!");
+    fetchChangeovers();
+  } catch (err) {
+    alert("Wrong password or failed request");
+  }
+}
 
 // Load on mount
 let intervalId;

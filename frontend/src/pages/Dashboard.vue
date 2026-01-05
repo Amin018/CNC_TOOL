@@ -27,6 +27,7 @@
             v-for="item in recentChangeovers"
             :key="item.id"
             class="py-2"
+             @click="goToChangeoverDetail(item.id)" style="cursor: pointer;"
           >
             <p class="text-gray-800 font-medium">
               {{ item.machine_no }} ({{ item.status }})
@@ -135,7 +136,9 @@ async function goToChangeovers(status) {
   })
 }
 
-
+async function goToChangeoverDetail(id) {
+  router.push(`/changeovers/${id}`);
+}
 
 onMounted(() => {
   isMounted.value = true;

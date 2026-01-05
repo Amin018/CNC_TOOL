@@ -7,6 +7,7 @@ from app.database import get_db
 from app import models, schemas, database
 from app.models import ChangeoverStatus
 from app.routers.auth import get_current_user, require_admin, require_leader, require_tool, require_user, require_role, require_leader_or_admin, require_tool_or_admin, require_user_or_leader  # assumes this returns current_user dict with role
+from app.routers.auth import verify_password
 import pytz
 
 malaysia_tz = pytz.timezone("Asia/Kuala_Lumpur")
@@ -33,9 +34,24 @@ def get_changeover_by_id(
         raise HTTPException(status_code=404, detail="Changeover not found")
     return changeover
 
+
+# ----- Delete ALL Request (Admin) -----
+@router.delete("/purge")
+def purge_changeovers(
+    payload: dict,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(require_admin)
+):
+    if not verify_password(payload["password"], current_user.hashed_password):
+        raise HTTPException(status_code=403, detail="Invalid password")
+
+    db.query(models.Changeover).delete()
+    db.commit()
+
+
 # DELETE request (Admin)
 @router.delete("/{changeover_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_user(
+def delete_changeover(
     changeover_id: int,
     db: Session = Depends(database.get_db),
     current_user: models.User = Depends(require_admin),
