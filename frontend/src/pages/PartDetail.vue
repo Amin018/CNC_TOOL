@@ -92,8 +92,13 @@
             </td>
           </tr>
 
-          <tr v-if="linkedParts.length === 0">
+          <tr v-if="linkedParts.length === 0 && user.role === 'admin'">
             <td colspan="3" class="text-center py-4 text-gray-500">
+              No linked parts
+            </td>
+          </tr>
+          <tr v-if="linkedParts.length === 0 && user.role !== 'admin'">
+            <td colspan="2" class="text-center py-4 text-gray-500">
               No linked parts
             </td>
           </tr>
