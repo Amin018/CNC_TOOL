@@ -2,13 +2,15 @@ from fastapi import APIRouter, Depends, HTTPException, status, Security
 from sqlalchemy.orm import Session
 from typing import List
 from datetime import datetime
+from sqlalchemy import text, create_engine
+from sqlalchemy.engine import Engine
 
-from app.database import get_db
+from app.database import get_db, engine
 from app import models, schemas, database
 from app.models import ChangeoverStatus
 from app.routers.auth import get_current_user, require_admin, require_leader, require_tool, require_user, require_role, require_leader_or_admin, require_tool_or_admin, require_user_or_leader  # assumes this returns current_user dict with role
 from app.routers.auth import verify_password
-import pytz
+import pytz, os
 
 malaysia_tz = pytz.timezone("Asia/Kuala_Lumpur")
 
@@ -44,8 +46,14 @@ def purge_changeovers(
 ):
     if not verify_password(payload["password"], current_user.hashed_password):
         raise HTTPException(status_code=403, detail="Invalid password")
+    
+    dialect = engine.dialect.name
 
-    db.query(models.Changeover).delete()
+    if dialect == "sqlite":
+        db.query(models.Changeover).delete()
+    else:
+        db.execute(text("TRUNCATE TABLE changeovers RESTART IDENTITY CASCADE"))
+
     db.commit()
 
 
