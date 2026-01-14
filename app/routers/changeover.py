@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status, Security
+from fastapi import APIRouter, Depends, HTTPException, status, Security, BackgroundTasks
 from sqlalchemy.orm import Session
 from typing import List
 from datetime import datetime
@@ -11,6 +11,8 @@ from app.models import ChangeoverStatus
 from app.routers.auth import get_current_user, require_admin, require_leader, require_tool, require_user, require_role, require_leader_or_admin, require_tool_or_admin, require_user_or_leader  # assumes this returns current_user dict with role
 from app.routers.auth import verify_password
 import pytz, os
+
+from app.email_utils import send_changeover_email, concur_done_email
 
 malaysia_tz = pytz.timezone("Asia/Kuala_Lumpur")
 
@@ -75,9 +77,11 @@ def delete_changeover(
 # ----- CREATE REQUEST (User/Leader) -----
 @router.post("/", response_model=schemas.ChangeoverResponse)
 def create_changeover_request(
+    background_tasks: BackgroundTasks,
     request: schemas.ChangeoverCreate,
     db: Session = Depends(get_db),
-    current_user: models.User = Depends(require_user_or_leader)
+    current_user: models.User = Depends(require_user_or_leader),
+    
 ):
     new_request = models.Changeover(
         production_line=request.production_line,
@@ -91,12 +95,20 @@ def create_changeover_request(
     db.add(new_request)
     db.commit()
     db.refresh(new_request)
+
+    background_tasks.add_task(
+        send_changeover_email,
+        changeover_id=new_request.id,
+        machine_name=request.machine_no,
+        created_by=current_user.username
+    )
     return new_request
 
 
 # ----- CONCUR REQUEST (Leader/Admin) -----
 @router.put("/{changeover_id}/concur", response_model=schemas.ChangeoverResponse)
 def concur_changeover_request(
+    background_tasks: BackgroundTasks,
     changeover_id: int,
     db: Session = Depends(get_db),
     current_user: models.User = Depends(require_leader_or_admin)  # Admin/Leader only
@@ -110,6 +122,13 @@ def concur_changeover_request(
 
     db.commit()
     db.refresh(changeover)
+
+    background_tasks.add_task(
+        concur_done_email,
+        changeover_id=changeover_id,
+        machine_name=changeover.machine_no,
+        concur_by=current_user.username
+    )
     return changeover
 
 # ----- Acknowledge REQUEST (Tool) -----

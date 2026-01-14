@@ -168,7 +168,7 @@
           </button>
 
           <button
-            v-if="(user.role === 'tool' || user.role === 'admin') && changeover.status === 'Pending'"
+            v-if="(user.role === 'tool' || user.role === 'admin') && changeover.concurred_by"
             @click="acknowledgeChangeover"
             class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
           >
