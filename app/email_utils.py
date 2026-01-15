@@ -42,7 +42,7 @@ def send_changeover_email(
     msg["Subject"] = f"New Changeover Created - {machine_name}"
 
     body = f"""
-        A new CNC changeover has been created.
+        A NEW Changeover has been Created.
 
         Changeover ID : {changeover_id}
         Machine       : {machine_name}
@@ -74,11 +74,76 @@ def concur_done_email(
     msg["Subject"] = f"New Concur - {machine_name}"
 
     body = f"""
-        A changeover has been concurred.
+        A changeover has been Concurred.
 
         Changeover ID : {changeover_id}
         Machine       : {machine_name}
         Concurred By    : {concur_by}
+
+        Please log in to the CNC system for details.
+        """
+
+    msg.attach(MIMEText(body, "plain"))
+
+    with smtplib.SMTP(EMAIL_HOST, EMAIL_PORT) as server:
+        server.starttls()
+        server.login(EMAIL_USER, EMAIL_PASSWORD)
+        server.send_message(msg)
+
+
+def send_toolrequest_email(
+    tool_id: int,
+    machine_name: str,
+    tool: str,
+    created_by: str,
+    to_email: str = EMAIL_LEADER
+) -> None:
+    
+
+    msg = MIMEMultipart()
+    msg["From"] = f"CNC System <{EMAIL_USER}>"
+    msg["To"] = to_email
+    msg["Subject"] = f"New Tool Change Requested - {machine_name}"
+
+    body = f"""
+        A new Tool Change has been created.
+
+        Request ID    : {tool_id}
+        Machine       : {machine_name}
+        Tool          : {tool}
+        Created By    : {created_by}
+
+        Please log in to the CNC system for details.
+        """
+
+    msg.attach(MIMEText(body, "plain"))
+
+    with smtplib.SMTP(EMAIL_HOST, EMAIL_PORT) as server:
+        server.starttls()
+        server.login(EMAIL_USER, EMAIL_PASSWORD)
+        server.send_message(msg)
+
+def concur_toolrequest_email(
+    tool_id: int,
+    machine_name: str,
+    tool: str,
+    concur_by: str,
+    to_email: str = EMAIL_TOOL
+) -> None:
+    
+
+    msg = MIMEMultipart()
+    msg["From"] = f"CNC System <{EMAIL_USER}>"
+    msg["To"] = to_email
+    msg["Subject"] = f"New Tool Change Requested - {machine_name}"
+
+    body = f"""
+        A new Tool Change has been Concurred.
+
+        Request ID    : {tool_id}
+        Machine       : {machine_name}
+        Tool          : {tool}
+        Concurred By  : {concur_by}
 
         Please log in to the CNC system for details.
         """

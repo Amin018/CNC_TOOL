@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, BackgroundTasks
 from sqlalchemy.orm import Session
 from typing import List
 from datetime import datetime
@@ -9,6 +9,7 @@ from app.models import ToolStatus
 from app.routers.auth import get_current_user, require_admin, require_leader, require_tool, require_user, require_user_or_leader, require_leader_or_admin, require_tool_or_admin  # assumes this returns current_user dict with role
 import pytz
 
+from app.email_utils import send_toolrequest_email, concur_toolrequest_email
 
 router = APIRouter(prefix="/tools", tags=["Tools"])
 malaysia_tz = pytz.timezone("Asia/Kuala_Lumpur")
@@ -40,6 +41,7 @@ def get_changeover_by_id(
 # ----- CREATE REQUEST (User) -----
 @router.post("/", response_model=schemas.ToolRequestResponse)
 def create_tool_request(
+    background_tasks: BackgroundTasks,
     request: schemas.ToolRequestCreate,
     db: Session = Depends(get_db),
     current_user: models.User = Depends(require_user_or_leader)
@@ -56,6 +58,14 @@ def create_tool_request(
     db.add(new_request)
     db.commit()
     db.refresh(new_request)
+    
+    background_tasks.add_task(
+        send_toolrequest_email,
+        tool_id=new_request.id,
+        machine_name=request.machine_no,
+        tool=request.tool_name,
+        created_by=current_user.username
+    )
     return new_request
 
 
@@ -63,6 +73,7 @@ def create_tool_request(
 # ----- CONCUR REQUEST (Leader/Admin) -----
 @router.put("/{tool_id}/concur", response_model=schemas.ToolRequestResponse)
 def concur_tool_request(
+    background_tasks: BackgroundTasks,
     tool_id: int,
     db: Session = Depends(get_db),
     current_user: models.User = Depends(require_leader_or_admin)  # Admin/Leader only
@@ -76,6 +87,13 @@ def concur_tool_request(
     Tool_Request.status = ToolStatus.IN_PROGRESS
     db.commit()
     db.refresh(Tool_Request)
+    background_tasks.add_task(
+        concur_toolrequest_email,
+        tool_id=tool_id,
+        machine_name=Tool_Request.machine_no,
+        tool=Tool_Request.tool_name,
+        concur_by=current_user.username
+    )
     return Tool_Request
 
 
