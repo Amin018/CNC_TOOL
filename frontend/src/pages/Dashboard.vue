@@ -85,9 +85,21 @@ async function fetchDashboardData() {
     // Recent 5 changeovers
     recentChangeovers.value = data.slice(-5).reverse();
 
+    // Get today and 7 days ago
+    const today = new Date();
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(today.getDate() - 6); // last 7 days including today
+
+    // Filter data to last 7 days
+    const lastWeekData = data.filter((c) => {
+      const date = new Date(c.time_requested);
+      return date >= sevenDaysAgo && date <= today;
+    });
+
+
     // Chart Data (weekly trend: counts grouped by day)
     const grouped = {};
-    data.forEach((c) => {
+    lastWeekData.forEach((c) => {
       const date = new Date(c.time_requested).toLocaleDateString();
       grouped[date] = (grouped[date] || 0) + 1;
     });
