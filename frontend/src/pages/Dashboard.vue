@@ -88,7 +88,7 @@ async function fetchDashboardData() {
     // Get today and 7 days ago
     const today = new Date();
     const sevenDaysAgo = new Date();
-    sevenDaysAgo.setDate(today.getDate() - 6); // last 7 days including today
+    sevenDaysAgo.setDate(today.getDate() - 7); // last 7 days including today
 
     // Filter data to last 7 days
     const lastWeekData = data.filter((c) => {
