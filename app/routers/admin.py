@@ -149,6 +149,7 @@ def export_changeovers_to_csv(
             "time_for_changeover": c.time_for_changeover.strftime("%Y-%m-%d %H:%M:%S") if c.time_for_changeover else None,
             "current_part_no": c.current_part_no,
             "next_part_no": c.next_part_no,
+            "remark_request":c.remark_request,
 
             "requested_by": c.requested_by,
             "time_requested": c.time_requested.strftime("%Y-%m-%d %H:%M:%S") if c.time_requested else None,

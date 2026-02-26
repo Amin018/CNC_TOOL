@@ -22,8 +22,16 @@
             <span><strong>Next Part:</strong> {{ changeover.next_part_no }}</span>
           </div>
 
-          <div class="flex justify-between border-b pb-4">
+          <div class="flex justify-between pb-1">
             <span><strong>Changeover Time:</strong> {{ formatDate(changeover.time_for_changeover) }}</span>
+          </div>
+
+          <div class="flex justify-between pb-1 -mb-0">
+            <span><strong>Remark Request:</strong></span>
+          </div>
+
+          <div class="flex justify-between border-b pb-4">
+            <pre style="font-family: 'Arial', serif; font-size: 14px;"> {{ changeover.remark_request }}</pre>
           </div>
 
           <div class="flex justify-between space-x-4 pb-1">

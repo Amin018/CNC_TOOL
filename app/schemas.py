@@ -59,12 +59,12 @@ class ChangeoverBase(BaseModel):
     next_part_no: str
 
 class ChangeoverCreate(ChangeoverBase):
-    pass
+    remark_request: Optional[str]
 
 # ------------------------------
 # Response Schema
 # ------------------------------
-class ChangeoverResponse(ChangeoverBase):
+class ChangeoverResponse(ChangeoverCreate):
     
     # Step tracking
     id: int

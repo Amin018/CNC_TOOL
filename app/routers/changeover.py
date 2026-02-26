@@ -91,6 +91,7 @@ def create_changeover_request(
         time_for_changeover=request.time_for_changeover,
         requested_by=current_user.username,  # username instead of ID
         time_requested=datetime.now(malaysia_tz).replace(tzinfo=None),  # Ensure timezone-naive datetime
+        remark_request = request.remark_request
     )
     db.add(new_request)
     db.commit()

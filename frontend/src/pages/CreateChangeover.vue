@@ -114,6 +114,13 @@
           />
         </div>
 
+        <!-- Remarks -->
+        <textarea
+          v-model="remark_request"
+          placeholder="Tool to be requested"
+          class="w-full border p-2 rounded"
+        ></textarea>
+
         <!-- Submit -->
         <button
           type="submit"
@@ -139,7 +146,8 @@ const form = ref({
   machine_no: "",
   current_part_no: "",
   next_part_no: "",
-  time_for_changeover: ""
+  time_for_changeover: "",
+  remark_request: ""
 })
 
 async function submitChangeover() {
@@ -149,6 +157,10 @@ async function submitChangeover() {
     form.value.current_part_no = currentPart.value
     form.value.next_part_no = nextPart.value
 
+    if (remark_request != ""){
+      form.value.remark_request = remark_request
+    }
+
     if (
       currentPart.value.includes(",") ||
       nextPart.value.includes(",")
@@ -156,6 +168,8 @@ async function submitChangeover() {
       const ok = window.confirm("Are you sure to submit more than 1 part?");
       if (!ok) return;   // stop function if user presses cancel
     }
+
+    console.log(form.value.remark_request)
 
     await api.post("/changeovers/", form.value)
     alert("Changeover request created successfully!")
@@ -268,7 +282,7 @@ function NextapplyLinkedToCurrent() {
 }
 
 
-
+const remark_request = ref("")
 const machines = ref([])
 const productionLines = ref([])
 const filteredMachines = ref([])

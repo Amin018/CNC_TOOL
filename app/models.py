@@ -89,6 +89,8 @@ class Changeover(Base):
     current_part_no: Mapped[str] = mapped_column(String(100))
     next_part_no: Mapped[str] = mapped_column(String(100))
 
+    remark_request: Mapped[str | None] = mapped_column(String(255), nullable=True)
+
     # Step tracking (by username)
     requested_by: Mapped[str] = mapped_column(String(100))
     time_requested: Mapped[datetime] = mapped_column(DateTime, default=datetime.now(malaysia_tz))
