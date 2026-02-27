@@ -11,17 +11,20 @@ from enum import Enum
 class UserCreate(BaseModel):
     username: str
     password: str
-    role: str   # Expected: "admin
+    role: str
+    full_name: str
 
 class UserUpdate(BaseModel):
     # what admin is allowed to change (keep it minimal for now)
     role: str
+    full_name: Optional[str]
 
-# Output schema for returning user details (no password)
+# Output schema for returning user details
 class UserResponse(BaseModel):
     id: int
     username: str
     role: str
+    full_name: Optional[str]
 
     class Config:
         orm_mode = True   # This allows SQLAlchemy objects to work with Pydantic

@@ -8,6 +8,7 @@
       <form @submit.prevent="createUser" class="space-y-3">
         <input v-model="newUser.username" placeholder="Username" class="border p-2 rounded w-full" />
         <input v-model="newUser.password" type="password" placeholder="Password" class="border p-2 rounded w-full" />
+        <input v-model="newUser.full_name" placeholder="Work ID" class="border p-2 rounded w-full" />
         <select v-model="newUser.role" class="border p-2 rounded w-full">
           <option value="user">User</option>
           <option value="tool">Tool</option>
@@ -29,29 +30,76 @@
             <th class="border p-2">ID</th>
             <th class="border p-2">Username</th>
             <th class="border p-2">Role</th>
-            <th class="border p-2">Actions</th>
+            <th class="border p-2">Work ID</th>
+            <th class="border p-2">Action</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="user in users" :key="user.id">
             <td class="border p-2">{{ user.id }}</td>
             <td class="border p-2">{{ user.username }}</td>
-            <td class="border p-2">
-              <select v-model="user.role" @change="updateUserRole(user)" class="border p-1 rounded">
-                <option value="user">User</option>
-                <option value="tool">Tool</option>
-                <option value="leader">Leader</option>
-                <option value="admin">Admin</option>
-              </select>
-            </td>
-            <td class="border p-2">
-              <button @click="deleteUser(user.id)" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">
+            <td class="border p-2">{{ user.role }}</td>
+            <td class="border p-2">{{ user.full_name }}</td>
+            <td class="border p-2 text-center space-x-2 space-y-2">
+              <button 
+                @click="openEditModal(user)" 
+                class="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600">
+                Edit
+              </button>
+
+              <button 
+                @click="deleteUser(user.id)" 
+                class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">
                 Delete
               </button>
             </td>
           </tr>
         </tbody>
       </table>
+    </div>
+
+    <!-- Edit User Modal -->
+    <div v-if="showEditModal" 
+        class="fixed inset-0 backdrop-blur-sm bg-black/30 flex items-center justify-center">
+
+      <div class="bg-white p-6 rounded-lg shadow-lg w-96">
+        <h2 class="text-xl font-semibold mb-4">Edit User</h2>
+
+        <div class="space-y-3">
+         <input 
+            v-model="selectedUser.username" 
+            class="border p-2 rounded w-full" 
+            placeholder="Username" />
+
+          <input 
+            v-model="selectedUser.full_name" 
+            class="border p-2 rounded w-full" 
+            placeholder="Work ID" />
+
+          <select 
+            v-model="selectedUser.role" 
+            class="border p-2 rounded w-full">
+            <option value="user">User</option>
+            <option value="tool">Tool</option>
+            <option value="leader">Leader</option>
+            <option value="admin">Admin</option>
+          </select>
+        </div>
+
+        <div class="flex justify-end space-x-2 mt-4">
+          <button 
+            @click="showEditModal = false" 
+            class="px-4 py-2 bg-gray-300 rounded">
+            Cancel
+          </button>
+
+          <button 
+            @click="saveUserUpdate" 
+            class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+            Save
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -65,6 +113,7 @@ const newUser = ref({
   username: "",
   password: "",
   role: "user",
+  full_name: ""
 });
 
 // Fetch all users
@@ -82,7 +131,7 @@ const createUser = async () => {
   try {
     await api.post("/admin/users", newUser.value);
     alert("User created!");
-    newUser.value = { username: "", password: "", role: "user" };
+    newUser.value = { username: "", password: "", role: "user", full_name: "" };
     fetchUsers();
   } catch (err) {
     console.error("Error creating user:", err);
@@ -117,6 +166,31 @@ const deleteUser = async (id) => {
     console.error("Error deleting user:", err);
   }}
 
+};
+
+const showEditModal = ref(false);
+const selectedUser = ref(null);
+
+const openEditModal = (user) => {
+  selectedUser.value = { ...user }; // clone object
+  showEditModal.value = true;
+};
+
+const saveUserUpdate = async () => {
+  try {
+    await api.put(`/admin/users/${selectedUser.value.id}`, {
+      role: selectedUser.value.role,
+      full_name: selectedUser.value.full_name
+    });
+
+    alert("User updated!");
+    showEditModal.value = false;
+    fetchUsers();
+
+  } catch (err) {
+    console.error("Update failed:", err);
+    alert("Failed to update user");
+  }
 };
 
 onMounted(fetchUsers);

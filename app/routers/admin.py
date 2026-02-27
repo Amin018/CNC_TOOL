@@ -44,7 +44,8 @@ def create_user(
     db_user = models.User(
         username=user.username,
         hashed_password=hashed_password,
-        role=user.role
+        role=user.role,
+
     )
     db.add(db_user)
     db.commit()
@@ -86,7 +87,12 @@ def update_user(
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
 
-    user.role = payload.role
+
+    if (user.role != payload.role):
+        user.role = payload.role
+    if (user.full_name != payload.full_name):
+        user.full_name = payload.full_name
+    #user.full_name = payload.full_name
     db.commit()
     db.refresh(user)
     return user
