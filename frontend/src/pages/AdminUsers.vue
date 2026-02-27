@@ -68,7 +68,7 @@
         <div class="space-y-3">
          <input 
             v-model="selectedUser.username" 
-            class="border p-2 rounded w-full" 
+            class="border p-2 rounded w-full" disabled
             placeholder="Username" />
 
           <input 
